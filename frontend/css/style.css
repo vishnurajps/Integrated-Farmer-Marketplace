@@ -1,0 +1,460 @@
+/* Google Font */
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#F5F7F2;
+}
+
+/* Navbar */
+
+.navbar{
+
+    padding:15px 0;
+}
+
+.navbar-brand{
+
+    font-size:30px;
+    font-weight:700;
+}
+
+.nav-link{
+
+    margin:0 12px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-link:hover{
+
+    color:#2E7D32 !important;
+}
+
+.btn-success{
+
+    background:#2E7D32;
+    border:none;
+}
+
+.btn-success:hover{
+
+    background:#1B5E20;
+}
+
+.form-select{
+
+    width:120px;
+}
+
+#themeToggle{
+
+    width:50px;
+}
+
+.dark-mode{
+
+    background:#121212;
+    color:white;
+}
+
+.dark-mode .navbar{
+
+    background:#1E1E1E !important;
+}
+
+.dark-mode .nav-link{
+
+    color:white !important;
+}
+
+.dark-mode .navbar-brand{
+
+    color:#81C784 !important;
+}
+
+/* ==========================
+   Hero Section
+========================== */
+
+.hero {
+    background-image: url("../images/farm-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 90vh;
+    position: relative;
+}
+
+.hero-overlay {
+    background: rgba(0, 0, 0, 0.55);
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero h1{
+
+    font-weight:700;
+
+}
+
+.hero p{
+
+    max-width:600px;
+
+    font-size:20px;
+
+}
+
+.btn-outline-light:hover{
+
+    color:#2E7D32;
+
+}
+
+/*==========================
+        Services
+===========================*/
+
+.services{
+
+    background:#ffffff;
+
+}
+
+.service-card{
+
+    background:#fff;
+
+    padding:40px 30px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+    transition:.4s;
+
+    height:100%;
+
+}
+
+.service-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.15);
+
+}
+
+.service-icon{
+
+    font-size:60px;
+
+    margin-bottom:20px;
+
+}
+
+.service-card h3{
+
+    color:#2E7D32;
+
+    margin-bottom:15px;
+
+}
+
+.service-card p{
+
+    color:#555;
+
+    margin-bottom:20px;
+
+}
+
+/*==========================
+      Why Choose IFMAP
+===========================*/
+
+.why-us{
+
+    background:#F5F7F2;
+
+}
+
+.feature-box{
+
+    background:#fff;
+
+    padding:35px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    transition:.4s;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    height:100%;
+
+}
+
+.feature-box:hover{
+
+    background:#2E7D32;
+
+    color:#fff;
+
+    transform:translateY(-10px);
+
+}
+
+.feature-box:hover p,
+.feature-box:hover h4,
+.feature-box:hover i{
+
+    color:white;
+
+}
+
+.feature-icon{
+
+    font-size:45px;
+
+    color:#2E7D32;
+
+    margin-bottom:20px;
+
+}
+
+/* ==========================
+   Dark Mode
+========================== */
+
+.dark-mode {
+    background: #121212;
+    color: #ffffff;
+}
+
+/* Navbar */
+.dark-mode .navbar {
+    background: #1E1E1E !important;
+}
+
+.dark-mode .navbar-brand {
+    color: #81C784 !important;
+}
+
+.dark-mode .nav-link {
+    color: #ffffff !important;
+}
+
+/* Services & Features Sections */
+.dark-mode .services,
+.dark-mode .why-us {
+    background: #121212;
+}
+
+/* Cards */
+.dark-mode .service-card,
+.dark-mode .feature-box {
+    background: #1f1f1f;
+    color: white;
+    box-shadow: 0 5px 15px rgba(255,255,255,0.08);
+}
+
+/* Headings */
+.dark-mode .service-card h3,
+.dark-mode .feature-box h4,
+.dark-mode h2 {
+    color: #81C784;
+}
+
+/* Paragraphs */
+.dark-mode .service-card p,
+.dark-mode .feature-box p,
+.dark-mode .text-muted {
+    color: #d0d0d0 !important;
+}
+
+/* Icons */
+.dark-mode .feature-icon {
+    color: #81C784;
+}
+
+/* Language dropdown */
+.dark-mode .form-select {
+    background: #2b2b2b;
+    color: white;
+    border-color: #555;
+}
+
+/* Outline button */
+.dark-mode .btn-outline-success {
+    color: #81C784;
+    border-color: #81C784;
+}
+
+.dark-mode .btn-outline-success:hover {
+    background: #81C784;
+    color: #121212;
+}
+
+.dark-mode .how-it-works{
+
+    background:#121212;
+
+}
+
+.dark-mode .step-box h5,
+.dark-mode .step-box p{
+
+    color:white;
+
+}
+
+.dark-mode .about{
+
+    background:#121212;
+
+}
+
+.dark-mode .about p,
+.dark-mode .about li{
+
+    color:white;
+
+}
+
+/*==========================
+      How It Works
+===========================*/
+
+.how-it-works{
+
+    background:#ffffff;
+
+}
+
+.step-box{
+
+    padding:20px;
+
+}
+
+.step-icon{
+
+    width:80px;
+
+    height:80px;
+
+    background:#2E7D32;
+
+    color:white;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+    font-size:32px;
+
+    margin-bottom:20px;
+
+    transition:.3s;
+
+}
+
+.step-icon:hover{
+
+    transform:scale(1.1);
+
+    background:#1B5E20;
+
+}
+
+/*==========================
+      Statistics
+===========================*/
+
+.statistics{
+
+    background:linear-gradient(135deg,#2E7D32,#43A047);
+
+    color:white;
+
+}
+
+.stat-card{
+
+    padding:30px;
+
+    transition:.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-10px);
+
+}
+
+.stat-icon{
+
+    font-size:55px;
+
+    margin-bottom:20px;
+
+}
+
+.stat-card h1{
+
+    font-size:50px;
+
+    font-weight:700;
+
+}
+
+.stat-card p{
+
+    font-size:18px;
+
+}
+
+/*==========================
+        About
+===========================*/
+
+.about{
+
+    background:#ffffff;
+
+}
+
+.about img{
+
+    border-radius:20px;
+
+    transition:.4s;
+
+}
+
+.about img:hover{
+
+    transform:scale(1.03);
+
+}
+
+.about p{
+
+    font-size:18px;
+
+    color:#555;
+
+}

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Integrated Farmer Marketplace</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ===== Navbar Start ===== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+
+    <div class="container">
+
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold text-success" href="#">
+            🌾 IFMAP
+        </a>
+
+        <!-- Mobile Menu -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar">
+
+            <!-- Navigation Links -->
+            <ul class="navbar-nav mx-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+
+            </ul>
+
+            <!-- Right Side -->
+            <div class="d-flex align-items-center">
+
+                <!-- Language -->
+                <label for="languageSelect"></label><select id="languageSelect" class="form-select me-3">
+
+                    <option value="en">English</option>
+                    <option value="ta">தமிழ்</option>
+
+                </select>
+
+                <!-- Theme Button -->
+                <button id="themeToggle"
+                        class="btn btn-outline-success me-3">
+
+                    🌙
+
+                </button>
+
+                <!-- Login -->
+                <a href="pages/login.html"
+                   class="btn btn-success">
+
+                    Login
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+<!-- ===== Navbar End ===== -->
+ <!-- ===== Hero Section Start ===== -->
+<section class="hero">
+
+    <div class="hero-overlay">
+
+        <div class="container">
+
+            <div class="row align-items-center" style="min-height:90vh;">
+
+                <div class="col-lg-7">
+
+                    <h1 class="display-3 fw-bold text-white">
+                        Integrated Farmer Marketplace
+                    </h1>
+
+                    <h2 class="text-warning mb-4">
+                        & Agricultural Advisory Platform
+                    </h2>
+
+                    <p class="lead text-white mb-4">
+                        Connecting Farmers, Buyers, and Agricultural Advisors
+                        through one smart digital platform.
+                    </p>
+
+                    <a href="pages/register.html" class="btn btn-success btn-lg me-3">
+                        Get Started
+                    </a>
+
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        Explore Marketplace
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ===== Hero Section End ===== -->
+
+<!-- ===== Services Section Start ===== -->
+
+<section class="services py-5" id="services">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold text-success">
+                Our Services
+            </h2>
+
+            <p class="text-muted">
+                Empowering Farmers, Buyers, and Agricultural Advisors through one smart platform.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Farmer -->
+
+            <div class="col-lg-4">
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        👨‍🌾
+                    </div>
+
+                    <h3>Farmer</h3>
+
+                    <p>
+                        Upload crops, manage products, view sales history,
+                        and connect directly with buyers.
+                    </p>
+
+                    <a href="#" class="btn btn-success">
+                        Learn More
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Buyer -->
+
+            <div class="col-lg-4">
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        🛒
+                    </div>
+
+                    <h3>Buyer</h3>
+
+                    <p>
+                        Search fresh crops, filter by district,
+                        purchase directly from farmers, and track orders.
+                    </p>
+
+                    <a href="#" class="btn btn-success">
+                        Learn More
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Advisor -->
+
+            <div class="col-lg-4">
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        🌱
+                    </div>
+
+                    <h3>Agricultural Advisor</h3>
+
+                    <p>
+                        Get crop recommendations based on soil type,
+                        district, and seasonal conditions.
+                    </p>
+
+                    <a href="#" class="btn btn-success">
+                        Learn More
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===== Services Section End ===== -->
+
+<!-- ===== Why Choose IFMAP Start ===== -->
+
+<section class="why-us py-5" id="features">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold text-success">
+                Why Choose IFMAP?
+            </h2>
+
+            <p class="text-muted">
+                A complete digital ecosystem connecting farmers, buyers and agricultural advisors.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-shop feature-icon"></i>
+
+                    <h4>Direct Marketplace</h4>
+
+                    <p>
+                        Farmers can sell directly to buyers without middlemen.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-geo-alt-fill feature-icon"></i>
+
+                    <h4>District Search</h4>
+
+                    <p>
+                        Buyers can search products district-wise.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-graph-up-arrow feature-icon"></i>
+
+                    <h4>Sales Analytics</h4>
+
+                    <p>
+                        Farmers can monitor their sales with graphs.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-lightbulb feature-icon"></i>
+
+                    <h4>Crop Advisory</h4>
+
+                    <p>
+                        Get crop recommendations based on soil and district.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-bell-fill feature-icon"></i>
+
+                    <h4>Notifications</h4>
+
+                    <p>
+                        Buyers and farmers receive instant order updates.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-box">
+
+                    <i class="bi bi-truck feature-icon"></i>
+
+                    <h4>Order Tracking</h4>
+
+                    <p>
+                        Track every order until it reaches the buyer.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===== Why Choose IFMAP End ===== -->
+
+<!-- ===== How It Works Start ===== -->
+
+<section class="how-it-works py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold text-success">
+                How It Works
+            </h2>
+
+            <p class="text-muted">
+                Follow these simple steps to start using the platform.
+            </p>
+
+        </div>
+
+        <div class="row text-center">
+
+            <div class="col-md-2 offset-md-1">
+
+                <div class="step-box">
+
+                    <div class="step-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+
+                    <h5>Register</h5>
+
+                    <p>Create your account.</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="step-box">
+
+                    <div class="step-icon">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </div>
+
+                    <h5>Login</h5>
+
+                    <p>Secure authentication.</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="step-box">
+
+                    <div class="step-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <h5>Choose Role</h5>
+
+                    <p>Farmer, Buyer or Advisor.</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="step-box">
+
+                    <div class="step-icon">
+                        <i class="bi bi-cart-check-fill"></i>
+                    </div>
+
+                    <h5>Buy / Sell</h5>
+
+                    <p>Trade agricultural products.</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="step-box">
+
+                    <div class="step-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+
+                    <h5>Track Order</h5>
+
+                    <p>Follow delivery status.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===== How It Works End ===== -->
+
+<!-- ===== Statistics Section Start ===== -->
+
+<section class="statistics py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold text-white">
+                Platform Statistics
+            </h2>
+
+            <p class="text-light">
+                Building a stronger agricultural community together.
+            </p>
+
+        </div>
+
+        <div class="row text-center">
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="stat-card">
+
+                    <i class="bi bi-person-workspace stat-icon"></i>
+
+                    <h1>500+</h1>
+
+                    <p>Registered Farmers</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="stat-card">
+
+                    <i class="bi bi-cart4 stat-icon"></i>
+
+                    <h1>1000+</h1>
+
+                    <p>Active Buyers</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="stat-card">
+
+                    <i class="bi bi-lightbulb stat-icon"></i>
+
+                    <h1>50+</h1>
+
+                    <p>Agricultural Advisors</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="stat-card">
+
+                    <i class="bi bi-basket2-fill stat-icon"></i>
+
+                    <h1>2500+</h1>
+
+                    <p>Products Listed</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===== Statistics Section End ===== -->
+
+<!-- ===== About Section Start ===== -->
+
+<section class="about py-5" id="about">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- Left Side Image -->
+
+            <div class="col-lg-6 mb-4">
+
+                <img src="images/about-farm.jpg"
+                     class="img-fluid rounded shadow"
+                     alt="About IFMAP">
+
+            </div>
+
+            <!-- Right Side -->
+
+            <div class="col-lg-6">
+
+                <h2 class="fw-bold text-success mb-4">
+                    About IFMAP
+                </h2>
+
+                <p>
+                    Integrated Farmer Marketplace and Agricultural Advisory Platform
+                    is a smart digital solution that connects farmers directly with
+                    buyers while providing crop recommendations based on district
+                    and soil type.
+                </p>
+
+                <ul class="list-unstyled mt-4">
+
+                    <li class="mb-3">
+                        ✅ Direct Farmer-to-Buyer Marketplace
+                    </li>
+
+                    <li class="mb-3">
+                        ✅ Soil & District Based Crop Advisory
+                    </li>
+
+                    <li class="mb-3">
+                        ✅ Secure Transactions
+                    </li>
+
+                    <li class="mb-3">
+                        ✅ Real-time Notifications
+                    </li>
+
+                    <li class="mb-3">
+                        ✅ Order Tracking System
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===== About Section End ===== -->
+
+<section class="contact py-5" id="contact">
+
+    <div class="container text-center">
+
+        <h2 class="fw-bold text-success mb-4">
+            Contact Us
+        </h2>
+
+        <p class="mb-5">
+            We'd love to hear from you.
+        </p>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <i class="bi bi-geo-alt-fill fs-1 text-success"></i>
+
+                <h5 class="mt-3">Address</h5>
+
+                <p>
+                    Bannari Amman Institute of Technology,
+                    Erode, Tamil Nadu
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <i class="bi bi-envelope-fill fs-1 text-success"></i>
+
+                <h5 class="mt-3">Email</h5>
+
+                <p>
+                    triov.tech@gmail.com
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <i class="bi bi-telephone-fill fs-1 text-success"></i>
+
+                <h5 class="mt-3">Phone</h5>
+
+                <p>
+                    +91 9442650444
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer class="bg-success text-white text-center py-4">
+
+    <h5>Integrated Farmer Marketplace & Agricultural Advisory Platform</h5>
+
+    <p class="mb-1">
+        © 2026 All Rights Reserved.
+    </p>
+
+    <p class="mb-0">
+        Developed by Vimal Kumar, Vishnu, Vishnu Raj
+    </p>
+
+</footer>
+<script src="js/theme.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

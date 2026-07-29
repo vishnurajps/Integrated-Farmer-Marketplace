@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | IFMAP</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/register.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="register-card">
+
+        <h2>Create Account</h2>
+        <p>Join the Integrated Farmer Marketplace</p>
+
+        <form>
+
+            <div class="mb-3">
+
+                <label>Full Name</label>
+
+                <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Enter your full name"
+                        required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>Mobile Number</label>
+
+                <input
+                        type="tel"
+                        id="mobile"
+                        class="form-control"
+                        placeholder="Enter Mobile Number"
+                        maxlength="10"
+                        required>
+
+                <small id="mobileError"></small>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>Email (Optional)</label>
+
+                <input
+                        type="email"
+                        class="form-control"
+                        placeholder="Enter email">
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label>Password</label>
+
+                    <input type="password" id="password" class="form-control" required>
+                    <small id="strengthText"></small>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label>Confirm Password</label>
+
+                    <input type="password" id="confirmPassword" class="form-control" required>
+                    <small id="matchText"></small>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="mb-3">
+
+                <label>Select Role</label>
+
+                <select class="form-select" required>
+
+                    <option value="">Choose Role</option>
+
+                    <option>Farmer</option>
+
+                    <option>Buyer</option>
+
+                    <option>Advisor</option>
+
+                </select>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label>State</label>
+
+                    <select
+                            id="state"
+                            class="form-select"
+                            required>
+
+                        <option value="">Select State</option>
+
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+
+                        <option value="Karnataka">Karnataka</option>
+
+                        <option value="Kerala">Kerala</option>
+
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label>District</label>
+
+                    <select
+                            id="district"
+                            class="form-select"
+                            required>
+
+                        <option>Select District</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="mb-3">
+
+                <label>Address</label>
+
+                <textarea
+                        class="form-control"
+                        rows="3"
+                        placeholder="Enter address"
+                        required></textarea>
+
+            </div>
+
+            <button class="btn btn-success w-100">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <div class="text-center mt-3">
+
+            Already have an account?
+
+            <a href="login.html">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/register.js"></script>
+
+</body>
+</html>
