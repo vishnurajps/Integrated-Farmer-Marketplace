@@ -91,17 +91,103 @@
 
                 <label>Select Role</label>
 
-                <select class="form-select" required>
+                <select id="role" class="form-select" required>
 
-                    <option value="">Choose Role</option>
+    <option value="">Choose Role</option>
 
-                    <option>Farmer</option>
+    <option value="Farmer">Farmer</option>
 
-                    <option>Buyer</option>
+    <option value="Buyer">Buyer</option>
 
-                    <option>Advisor</option>
+    <option value="Advisor">Advisor</option>
 
-                </select>
+</select>
+
+<!-- Advisor Details -->
+
+<div id="advisorFields" style="display:none;">
+
+    <hr>
+
+    <h5 class="text-success mb-3">
+        Advisor Verification
+    </h5>
+
+    <div class="mb-3">
+
+        <label>Certification Number</label>
+
+        <input
+            type="text"
+            id="certificateNumber"
+            class="form-control"
+            placeholder="Enter Certification Number">
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Issuing Authority</label>
+
+        <input
+            type="text"
+            id="issuingAuthority"
+            class="form-control"
+            placeholder="Example: Tamil Nadu Agricultural University">
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Specialization</label>
+
+        <select id="specialization" class="form-select">
+
+            <option value="">Select Specialization</option>
+
+            <option>Soil Science</option>
+
+            <option>Crop Protection</option>
+
+            <option>Horticulture</option>
+
+            <option>Organic Farming</option>
+
+            <option>Irrigation</option>
+
+            <option>Plant Pathology</option>
+
+            <option>Other</option>
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Years of Experience (Optional)</label>
+
+        <input
+            type="number"
+            id="experience"
+            class="form-control"
+            min="0">
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Upload Certificate (PDF / JPG / PNG)</label>
+
+        <input
+            type="file"
+            id="certificateFile"
+            class="form-control"
+            accept=".pdf,.jpg,.jpeg,.png">
+
+    </div>
+
+</div>
 
             </div>
 

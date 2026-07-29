@@ -152,3 +152,24 @@ mobile.addEventListener("input", function () {
     }
 
 });
+
+// ============================
+// Advisor Fields
+// ============================
+
+const role = document.getElementById("role");
+const advisorFields = document.getElementById("advisorFields");
+
+role.addEventListener("change", function () {
+
+    if (this.value === "Advisor") {
+
+        advisorFields.style.display = "block";
+
+    } else {
+
+        advisorFields.style.display = "none";
+
+    }
+
+});
