@@ -1,0 +1,43 @@
+.table{
+
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.table td,
+.table th{
+
+    vertical-align:middle;
+
+}
+
+.btn-sm{
+
+    margin-right:5px;
+
+}
+
+.form-control,
+.form-select{
+
+    border-radius:10px;
+
+}
+
+.btn-success{
+
+    border-radius:10px;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f3fff3;
+
+}

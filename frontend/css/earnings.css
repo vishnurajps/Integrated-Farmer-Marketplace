@@ -1,0 +1,47 @@
+.earning-card{
+
+background:#fff;
+
+padding:25px;
+
+border-radius:15px;
+
+text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+transition:.3s;
+
+}
+
+.earning-card:hover{
+
+transform:translateY(-6px);
+
+}
+
+.earning-card h5{
+
+color:#666;
+
+}
+
+.earning-card h2{
+
+color:#2E7D32;
+
+font-weight:bold;
+
+margin-top:10px;
+
+}
+
+.card{
+
+border:none;
+
+border-radius:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}

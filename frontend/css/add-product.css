@@ -1,0 +1,42 @@
+.preview-img{
+
+width:220px;
+
+height:220px;
+
+object-fit:cover;
+
+border-radius:15px;
+
+border:3px dashed #2E7D32;
+
+margin-top:20px;
+
+}
+
+form{
+
+background:white;
+
+padding:30px;
+
+border-radius:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.form-control,
+.form-select{
+
+border-radius:10px;
+
+}
+
+.btn{
+
+border-radius:10px;
+
+padding:10px 25px;
+
+}

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Farmer Dashboard | IFMAP</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg dashboard-navbar">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand text-white fw-bold" href="#">
+
+            🌾 IFMAP
+
+        </a>
+
+        <div class="d-flex align-items-center">
+
+            <button class="btn btn-light me-3">
+
+                <i class="bi bi-bell"></i>
+
+            </button>
+
+            <button class="btn btn-light me-3">
+
+                <i class="bi bi-moon"></i>
+
+            </button>
+
+            <img src="../images/profile.png"
+                 class="profile-img">
+
+            <span class="text-white ms-2">
+
+                Vishnu
+
+            </span>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <ul>
+
+            <li class="active">
+
+                <i class="bi bi-speedometer2"></i>
+
+                Dashboard
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-box-seam"></i>
+
+                My Products
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Product
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-bag"></i>
+
+                Orders
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-cash-stack"></i>
+
+                Earnings
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-bell"></i>
+
+                Notifications
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-person"></i>
+
+                Profile
+
+            </li>
+
+            <li>
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                Logout
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="content">
+
+    <div class="welcome-section">
+
+        <div>
+
+            <h2>Welcome Back, Vishnu 👋</h2>
+
+            <p id="currentDate"></p>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics Cards -->
+
+    <div class="cards">
+
+        <div class="card-box">
+
+            <i class="bi bi-box-seam-fill"></i>
+
+            <h3>15</h3>
+
+            <p>Products</p>
+
+        </div>
+
+        <div class="card-box">
+
+            <i class="bi bi-cart-check-fill"></i>
+
+            <h3>28</h3>
+
+            <p>Orders</p>
+
+        </div>
+
+        <div class="card-box">
+
+            <i class="bi bi-currency-rupee"></i>
+
+            <h3>₹24,850</h3>
+
+            <p>Earnings</p>
+
+        </div>
+
+        <div class="card-box">
+
+            <i class="bi bi-star-fill"></i>
+
+            <h3>4.8</h3>
+
+            <p>Rating</p>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Products -->
+
+    <div class="table-section">
+
+        <h4>🌾 Recent Products</h4>
+
+        <table class="table table-hover">
+
+            <thead>
+
+            <tr>
+
+                <th>Product</th>
+
+                <th>Category</th>
+
+                <th>Quantity</th>
+
+                <th>Price</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr>
+
+                <td>Tomato</td>
+
+                <td>Vegetable</td>
+
+                <td>100 Kg</td>
+
+                <td>₹30/Kg</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Onion</td>
+
+                <td>Vegetable</td>
+
+                <td>80 Kg</td>
+
+                <td>₹25/Kg</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Banana</td>
+
+                <td>Fruit</td>
+
+                <td>120 Dozen</td>
+
+                <td>₹40/Dozen</td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Recent Orders -->
+
+    <div class="table-section">
+
+        <h4>📦 Recent Orders</h4>
+
+        <table class="table table-hover">
+
+            <thead>
+
+            <tr>
+
+                <th>Buyer</th>
+
+                <th>Product</th>
+
+                <th>Quantity</th>
+
+                <th>Status</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr>
+
+                <td>Rahul</td>
+
+                <td>Tomato</td>
+
+                <td>50 Kg</td>
+
+                <td><span class="badge bg-success">Delivered</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>Priya</td>
+
+                <td>Onion</td>
+
+                <td>20 Kg</td>
+
+                <td><span class="badge bg-warning text-dark">Pending</span></td>
+
+            </tr>
+
+            <tr>
+
+                <td>Arjun</td>
+
+                <td>Banana</td>
+
+                <td>40 Dozen</td>
+
+                <td><span class="badge bg-primary">Processing</span></td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="row">
+
+    <!-- Weather -->
+
+    <div class="col-lg-4">
+
+        <div class="info-card">
+
+            <h4>🌤 Weather</h4>
+
+            <h2>32°C</h2>
+
+            <p>Sunny</p>
+
+            <p>Erode, Tamil Nadu</p>
+
+        </div>
+
+    </div>
+
+    <!-- Today's Tips -->
+
+    <div class="col-lg-4">
+
+        <div class="info-card">
+
+            <h4>🌱 Today's Farming Tip</h4>
+
+            <p>
+
+                Irrigate crops during the evening to reduce
+                water evaporation and improve soil moisture.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Notifications -->
+
+    <div class="col-lg-4">
+
+        <div class="info-card">
+
+            <h4>🔔 Notifications</h4>
+
+            <ul>
+
+                <li>New order received.</li>
+
+                <li>Tomato price increased today.</li>
+
+                <li>Advisory updated.</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="table-section">
+
+    <h4>📈 Monthly Sales</h4>
+
+    <canvas id="salesChart"></canvas>
+
+</div>
+
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="../js/dashboard.js"></script>
+
+</body>
+
+</html>
