@@ -29,10 +29,11 @@
                 <label>Full Name</label>
 
                 <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter your full name"
-                        required>
+    type="text"
+    id="fullName"
+    class="form-control"
+    placeholder="Enter your full name"
+    required>
 
             </div>
 
@@ -57,9 +58,10 @@
                 <label>Email (Optional)</label>
 
                 <input
-                        type="email"
-                        class="form-control"
-                        placeholder="Enter email">
+    type="email"
+    id="email"
+    class="form-control"
+    placeholder="Enter email">
 
             </div>
 
@@ -95,11 +97,9 @@
 
     <option value="">Choose Role</option>
 
-    <option value="Farmer">Farmer</option>
-
-    <option value="Buyer">Buyer</option>
-
-    <option value="Advisor">Advisor</option>
+    <option value="FARMER">Farmer</option>
+<option value="BUYER">Buyer</option>
+<option value="ADVISOR">Advisor</option>
 
 </select>
 
@@ -240,18 +240,19 @@
                 <label>Address</label>
 
                 <textarea
-                        class="form-control"
-                        rows="3"
-                        placeholder="Enter address"
-                        required></textarea>
+    id="address"
+    class="form-control"
+    rows="3"
+    placeholder="Enter address"
+    required></textarea>
 
             </div>
 
-            <button class="btn btn-success w-100">
-
-                Register
-
-            </button>
+            <button type="button"
+        class="btn btn-success w-100"
+        onclick="registerUser()">
+    Register
+</button>
 
         </form>
 

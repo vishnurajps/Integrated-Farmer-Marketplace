@@ -40,7 +40,7 @@ const district = document.getElementById("district");
 
 state.addEventListener("change", function () {
 
-    district.innerHTML = "<option>Select District</option>";
+    district.innerHTML = "<option value=''>Select District</option>";
 
     const list = districts[this.value];
 
@@ -48,7 +48,7 @@ state.addEventListener("change", function () {
 
         list.forEach(function (item) {
 
-            district.innerHTML += `<option>${item}</option>`;
+            district.innerHTML += `<option value="${item}">${item}</option>`;
 
         });
 
@@ -162,7 +162,7 @@ const advisorFields = document.getElementById("advisorFields");
 
 role.addEventListener("change", function () {
 
-    if (this.value === "Advisor") {
+    if (this.value === "ADVISOR") {
 
         advisorFields.style.display = "block";
 
@@ -173,3 +173,81 @@ role.addEventListener("change", function () {
     }
 
 });
+
+// ============================
+// Register User
+// ============================
+
+async function registerUser() {
+
+    // Password Match Check
+    if (password.value !== confirmPassword.value) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    const data = {
+
+        fullName: document.getElementById("fullName").value.trim(),
+
+        mobile: document.getElementById("mobile").value.trim(),
+
+        email: document.getElementById("email").value.trim(),
+
+        password: document.getElementById("password").value,
+
+        role: document.getElementById("role").value,
+
+        state: document.getElementById("state").value,
+
+        district: document.getElementById("district").value,
+
+        address: document.getElementById("address").value.trim(),
+
+        certificateNumber: document.getElementById("certificateNumber").value.trim()
+
+    };
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/auth/register", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+        const result = await response.text();
+
+        if (response.ok) {
+
+            alert(result);
+
+            document.querySelector("form").reset();
+
+            advisorFields.style.display = "none";
+
+            document.getElementById("strengthText").innerHTML = "";
+            document.getElementById("matchText").innerHTML = "";
+            document.getElementById("mobileError").innerHTML = "";
+
+        } else {
+
+            alert("Error: " + result);
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to connect to Spring Boot Server.");
+
+    }
+
+}
