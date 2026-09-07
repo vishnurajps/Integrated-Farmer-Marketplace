@@ -1,94 +1,151 @@
-// Current Date
+// ===============================
+// CURRENT DATE
+// ===============================
 
-const today = new Date();
+const currentDate = document.getElementById("currentDate");
 
-const options = {
+if (currentDate) {
 
-    weekday: 'long',
+    const today = new Date();
 
-    year: 'numeric',
+    currentDate.innerHTML = today.toLocaleDateString(
+        "en-IN",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
 
-    month: 'long',
+}
 
-    day: 'numeric'
 
-};
+// ===============================
+// GET LOGGED-IN USER
+// ===============================
 
-document.getElementById("currentDate").innerHTML =
-today.toLocaleDateString("en-IN", options);
+const userName = localStorage.getItem("userName");
 
-// Sales Chart
+if (userName) {
 
-const ctx = document.getElementById("salesChart");
+    const navbarName =
+        document.getElementById("userName");
 
-new Chart(ctx, {
+    const welcomeName =
+        document.getElementById("welcomeName");
 
-    type: "line",
 
-    data: {
+    if (navbarName) {
 
-        labels: [
+        navbarName.innerHTML = userName;
 
-            "Jan",
+    }
 
-            "Feb",
 
-            "Mar",
+    if (welcomeName) {
 
-            "Apr",
+        welcomeName.innerHTML = userName;
 
-            "May",
+    }
 
-            "Jun"
+}
 
-        ],
 
-        datasets: [{
+// ===============================
+// LOGOUT
+// ===============================
 
-            label: "Sales",
+function logoutUser() {
 
-            data: [
+    const confirmLogout =
+        confirm("Are you sure you want to logout?");
 
-                20,
 
-                35,
+    if (confirmLogout) {
 
-                28,
+        // Remove login information
 
-                45,
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userMobile");
 
-                52,
 
-                60
+        // Go to home page
 
-            ],
+        window.location.href = "../index.html";
 
-            borderColor: "#2E7D32",
+    }
 
-            backgroundColor: "rgba(46,125,50,.2)",
+}
 
-            fill: true,
 
-            tension: 0.4
+// ===============================
+// DARK MODE
+// ===============================
 
-        }]
+const themeButton =
+    document.getElementById("themeButton");
 
-    },
 
-    options: {
+if (themeButton) {
 
-        responsive: true,
+    themeButton.addEventListener(
+        "click",
+        function () {
 
-        plugins: {
+            document.body.classList.toggle("dark-mode");
 
-            legend: {
+        }
+    );
 
-                display: true
+}
+
+
+// ===============================
+// SALES CHART
+// ===============================
+
+const chartElement =
+    document.getElementById("salesChart");
+
+
+if (chartElement) {
+
+    new Chart(chartElement, {
+
+        type: "bar",
+
+        data: {
+
+            labels: [],
+
+            datasets: [{
+
+                label: "Monthly Sales",
+
+                data: []
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    display: true
+
+                }
 
             }
 
         }
 
-    }
+    });
 
-});
+}

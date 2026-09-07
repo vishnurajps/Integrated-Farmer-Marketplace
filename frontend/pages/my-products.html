@@ -37,27 +37,70 @@
 
     <aside class="sidebar">
 
-        <ul>
+    <ul>
 
-            <li><i class="bi bi-speedometer2"></i> Dashboard</li>
+        <li>
+            <a href="farmer-dashboard.html">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </a>
+        </li>
 
-            <li class="active"><i class="bi bi-box-seam"></i> My Products</li>
+        <li class="active">
+            <a href="my-products.html">
+                <i class="bi bi-box-seam"></i>
+                My Products
+            </a>
+        </li>
 
-            <li><i class="bi bi-plus-circle"></i> Add Product</li>
+        <li>
+            <a href="add-product.html" class="btn btn-success">
 
-            <li><i class="bi bi-bag"></i> Orders</li>
+    <i class="bi bi-plus-circle"></i>
 
-            <li><i class="bi bi-cash-stack"></i> Earnings</li>
+    Add Product
 
-            <li><i class="bi bi-bell"></i> Notifications</li>
+</a>
+        </li>
 
-            <li><i class="bi bi-person"></i> Profile</li>
+        <li>
+            <a href="orders.html">
+                <i class="bi bi-bag"></i>
+                Orders
+            </a>
+        </li>
 
-            <li><i class="bi bi-box-arrow-right"></i> Logout</li>
+        <li>
+            <a href="earnings.html">
+                <i class="bi bi-cash-stack"></i>
+                Earnings
+            </a>
+        </li>
 
-        </ul>
+        <li>
+            <a href="notifications.html">
+                <i class="bi bi-bell"></i>
+                Notifications
+            </a>
+        </li>
 
-    </aside>
+        <li>
+            <a href="profile.html">
+                <i class="bi bi-person"></i>
+                Profile
+            </a>
+        </li>
+
+        <li>
+            <a href="../index.html">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
 
     <main class="content">
 
@@ -65,13 +108,14 @@
 
             <h2>🌾 My Products</h2>
 
-            <button class="btn btn-success">
+          <button
+    class="btn btn-success"
+    onclick="window.location.href='add-product.html'">
 
-                <i class="bi bi-plus-circle"></i>
+    <i class="bi bi-plus-circle"></i>
+    Add Product
 
-                Add Product
-
-            </button>
+</button>
 
         </div>
 
@@ -80,24 +124,31 @@
             <div class="col-md-6">
 
                 <input type="text"
-                    class="form-control"
-                    placeholder="Search Product">
+       class="form-control"
+       id="searchProduct"
+       placeholder="Search Product">
 
             </div>
 
             <div class="col-md-3">
 
-                <select class="form-select">
+                <select class="form-select" id="categoryFilter">
 
-                    <option>All Categories</option>
+    <option value="All">All Categories</option>
 
-                    <option>Vegetable</option>
+    <option value="Vegetable">Vegetable</option>
 
-                    <option>Fruit</option>
+    <option value="Fruit">Fruit</option>
 
-                    <option>Grains</option>
+    <option value="Grains">Grains</option>
 
-                </select>
+    <option value="Pulses">Pulses</option>
+
+    <option value="Flowers">Flowers</option>
+
+    <option value="Spices">Spices</option>
+
+</select>
 
             </div>
 
@@ -105,140 +156,39 @@
 
         <table class="table table-bordered table-hover align-middle">
 
-            <thead class="table-success">
+    <thead class="table-success">
 
-                <tr>
+        <tr>
 
-                    <th>Image</th>
+            <th>Image</th>
 
-                    <th>Product</th>
+            <th>Product</th>
 
-                    <th>Category</th>
+            <th>Category</th>
 
-                    <th>Quantity</th>
+            <th>Quantity</th>
 
-                    <th>Price</th>
+            <th>Price</th>
 
-                    <th>Status</th>
+            <th>Status</th>
 
-                    <th>Action</th>
+            <th>Action</th>
 
-                </tr>
+        </tr>
 
-            </thead>
+    </thead>
 
-            <tbody>
 
-                <tr>
+    <tbody id="productTableBody">
 
-                    <td>🍅</td>
+    </tbody>
 
-                    <td>Tomato</td>
-
-                    <td>Vegetable</td>
-
-                    <td>100 Kg</td>
-
-                    <td>₹30/Kg</td>
-
-                    <td>
-                        <span class="badge bg-success">Available</span>
-                    </td>
-
-                    <td>
-
-                        <button class="btn btn-warning btn-sm">
-
-                            <i class="bi bi-pencil-square"></i>
-
-                        </button>
-
-                        <button class="btn btn-danger btn-sm">
-
-                            <i class="bi bi-trash"></i>
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>🧅</td>
-
-                    <td>Onion</td>
-
-                    <td>Vegetable</td>
-
-                    <td>80 Kg</td>
-
-                    <td>₹25/Kg</td>
-
-                    <td>
-                        <span class="badge bg-success">Available</span>
-                    </td>
-
-                    <td>
-
-                        <button class="btn btn-warning btn-sm">
-
-                            <i class="bi bi-pencil-square"></i>
-
-                        </button>
-
-                        <button class="btn btn-danger btn-sm">
-
-                            <i class="bi bi-trash"></i>
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>🍌</td>
-
-                    <td>Banana</td>
-
-                    <td>Fruit</td>
-
-                    <td>120 Dozen</td>
-
-                    <td>₹40/Dozen</td>
-
-                    <td>
-                        <span class="badge bg-secondary">Sold Out</span>
-                    </td>
-
-                    <td>
-
-                        <button class="btn btn-warning btn-sm">
-
-                            <i class="bi bi-pencil-square"></i>
-
-                        </button>
-
-                        <button class="btn btn-danger btn-sm">
-
-                            <i class="bi bi-trash"></i>
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
+</table>
 
     </main>
 
 </div>
-
+<script src="../js/my-products.js"></script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Product | IFMAP</title>
+    <title>Edit Product | IFMAP</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
@@ -21,22 +21,23 @@
 
 <body>
 
-<!-- NAVBAR -->
+
+<!-- ================= NAVBAR ================= -->
 
 <nav class="navbar dashboard-navbar">
 
     <div class="container-fluid">
 
         <a href="farmer-dashboard.html"
-           class="navbar-brand text-white fw-bold">
+           class="navbar-brand text-white fw-bold text-decoration-none">
 
             🌾 IFMAP
 
         </a>
 
-        <span class="text-white">
+        <span class="text-white fw-semibold">
 
-            Add Product
+            Edit Product
 
         </span>
 
@@ -47,7 +48,8 @@
 
 <div class="dashboard">
 
-    <!-- SIDEBAR -->
+
+    <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar">
 
@@ -60,19 +62,22 @@
                 </a>
             </li>
 
-            <li>
+
+            <li class="active">
                 <a href="my-products.html">
                     <i class="bi bi-box-seam"></i>
                     My Products
                 </a>
             </li>
 
-            <li class="active">
+
+            <li>
                 <a href="add-product.html">
                     <i class="bi bi-plus-circle"></i>
                     Add Product
                 </a>
             </li>
+
 
             <li>
                 <a href="orders.html">
@@ -81,12 +86,14 @@
                 </a>
             </li>
 
+
             <li>
                 <a href="earnings.html">
                     <i class="bi bi-cash-stack"></i>
                     Earnings
                 </a>
             </li>
+
 
             <li>
                 <a href="notifications.html">
@@ -95,6 +102,7 @@
                 </a>
             </li>
 
+
             <li>
                 <a href="profile.html">
                     <i class="bi bi-person"></i>
@@ -102,8 +110,9 @@
                 </a>
             </li>
 
+
             <li>
-                <a href="login.html">
+                <a href="../index.html">
                     <i class="bi bi-box-arrow-right"></i>
                     Logout
                 </a>
@@ -114,23 +123,32 @@
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+    <!-- ================= MAIN CONTENT ================= -->
 
     <main class="content">
 
-        <h2 class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-            🌾 Add New Product
+            <h2>✏️ Edit Product</h2>
 
-        </h2>
+            <a href="my-products.html"
+               class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Products
+
+            </a>
+
+        </div>
 
 
-        <form id="productForm">
+        <form id="editProductForm">
 
             <div class="row">
 
 
-                <!-- PRODUCT NAME -->
+                <!-- Product Name -->
 
                 <div class="col-md-6 mb-3">
 
@@ -142,15 +160,14 @@
 
                     <input
                         type="text"
-                        id="name"
                         class="form-control"
-                        placeholder="Enter product name"
+                        id="name"
                         required>
 
                 </div>
 
 
-                <!-- CATEGORY -->
+                <!-- Category -->
 
                 <div class="col-md-6 mb-3">
 
@@ -161,34 +178,40 @@
                     </label>
 
                     <select
-                        id="category"
                         class="form-select"
+                        id="category"
                         required>
 
-                        <option value="">
-
-                            Select Category
-
+                        <option value="Vegetable">
+                            Vegetable
                         </option>
 
-                        <option>Vegetable</option>
+                        <option value="Fruit">
+                            Fruit
+                        </option>
 
-                        <option>Fruit</option>
+                        <option value="Grains">
+                            Grains
+                        </option>
 
-                        <option>Grains</option>
+                        <option value="Pulses">
+                            Pulses
+                        </option>
 
-                        <option>Pulses</option>
+                        <option value="Flowers">
+                            Flowers
+                        </option>
 
-                        <option>Flowers</option>
-
-                        <option>Spices</option>
+                        <option value="Spices">
+                            Spices
+                        </option>
 
                     </select>
 
                 </div>
 
 
-                <!-- QUANTITY -->
+                <!-- Quantity -->
 
                 <div class="col-md-6 mb-3">
 
@@ -200,14 +223,14 @@
 
                     <input
                         type="number"
-                        id="quantity"
                         class="form-control"
+                        id="quantity"
                         required>
 
                 </div>
 
 
-                <!-- UNIT -->
+                <!-- Unit -->
 
                 <div class="col-md-6 mb-3">
 
@@ -218,26 +241,22 @@
                     </label>
 
                     <select
-                        id="unit"
                         class="form-select"
+                        id="unit"
                         required>
 
-                        <option>Kg</option>
-
-                        <option>Ton</option>
-
-                        <option>Dozen</option>
-
-                        <option>Liter</option>
-
-                        <option>Bag</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Ton">Ton</option>
+                        <option value="Dozen">Dozen</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Bag">Bag</option>
 
                     </select>
 
                 </div>
 
 
-                <!-- PRICE -->
+                <!-- Price -->
 
                 <div class="col-md-6 mb-3">
 
@@ -249,14 +268,14 @@
 
                     <input
                         type="number"
-                        id="price"
                         class="form-control"
+                        id="price"
                         required>
 
                 </div>
 
 
-                <!-- HARVEST DATE -->
+                <!-- Harvest Date -->
 
                 <div class="col-md-6 mb-3">
 
@@ -268,13 +287,13 @@
 
                     <input
                         type="date"
-                        id="harvestDate"
-                        class="form-control">
+                        class="form-control"
+                        id="harvestDate">
 
                 </div>
 
 
-                <!-- LOCATION -->
+                <!-- Location -->
 
                 <div class="col-md-12 mb-3">
 
@@ -286,14 +305,13 @@
 
                     <input
                         type="text"
-                        id="location"
                         class="form-control"
-                        placeholder="Village / District">
+                        id="location">
 
                 </div>
 
 
-                <!-- DESCRIPTION -->
+                <!-- Description -->
 
                 <div class="col-md-12 mb-3">
 
@@ -304,14 +322,14 @@
                     </label>
 
                     <textarea
-                        id="description"
                         class="form-control"
+                        id="description"
                         rows="4"></textarea>
 
                 </div>
 
 
-                <!-- AVAILABILITY -->
+                <!-- Availability -->
 
                 <div class="col-md-6 mb-3">
 
@@ -322,54 +340,42 @@
                     </label>
 
                     <select
-                        id="availability"
-                        class="form-select">
+                        class="form-select"
+                        id="availability">
 
-                        <option>Available</option>
+                        <option value="Available">
+                            Available
+                        </option>
 
-                        <option>Out of Stock</option>
+                        <option value="Out of Stock">
+                            Out of Stock
+                        </option>
 
                     </select>
 
                 </div>
 
 
-                <!-- IMAGE URL -->
+                <!-- Image URL -->
 
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label">
 
-                        Product Image URL
+                        Image URL
 
                     </label>
 
                     <input
                         type="text"
-                        id="imageUrl"
                         class="form-control"
-                        placeholder="Paste any image URL">
-
-                </div>
-
-
-                <!-- IMAGE PREVIEW -->
-
-                <div class="col-md-12 text-center">
-
-                    <img
-                        id="preview"
-                        src="../images/no-image.png"
-                        class="preview-img"
-                        alt="Product Preview">
+                        id="imageUrl">
 
                 </div>
 
 
             </div>
 
-
-            <!-- BUTTONS -->
 
             <div class="mt-4">
 
@@ -379,21 +385,19 @@
 
                     <i class="bi bi-check-circle"></i>
 
-                    Add Product
+                    Update Product
 
                 </button>
 
 
-                <button
-                    type="reset"
-                    class="btn btn-secondary ms-2">
+                <a href="my-products.html"
+                   class="btn btn-secondary ms-2">
 
-                    Reset
+                    Cancel
 
-                </button>
+                </a>
 
             </div>
-
 
         </form>
 
@@ -402,7 +406,7 @@
 </div>
 
 
-<script src="../js/add-product.js"></script>
+<script src="../js/edit-product.js"></script>
 
 </body>
 
