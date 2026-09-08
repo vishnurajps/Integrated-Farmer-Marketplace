@@ -16,13 +16,15 @@ public class ProductController {
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
+
         this.productService = productService;
+
     }
 
 
-    // ===============================
-    // ADD PRODUCT FOR FARMER
-    // ===============================
+    // ==========================================
+    // ADD PRODUCT FOR A FARMER
+    // ==========================================
 
     @PostMapping("/farmer/{farmerId}")
     public ResponseEntity<Product> addProduct(
@@ -34,15 +36,34 @@ public class ProductController {
     ) {
 
         Product savedProduct =
-                productService.addProduct(farmerId, product);
+                productService.addProduct(
+                        farmerId,
+                        product
+                );
 
         return ResponseEntity.ok(savedProduct);
+
     }
 
 
-    // ===============================
-    // GET PRODUCTS BY FARMER
-    // ===============================
+    // ==========================================
+    // GET AVAILABLE PRODUCTS
+    // BUYER MARKETPLACE
+    // ==========================================
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Product>> getAvailableProducts() {
+
+        return ResponseEntity.ok(
+                productService.getAvailableProducts()
+        );
+
+    }
+
+
+    // ==========================================
+    // GET ALL PRODUCTS OF A FARMER
+    // ==========================================
 
     @GetMapping("/farmer/{farmerId}")
     public ResponseEntity<List<Product>> getProductsByFarmer(
@@ -52,90 +73,87 @@ public class ProductController {
     ) {
 
         return ResponseEntity.ok(
-
-                productService.getProductsByFarmer(farmerId)
-
+                productService.getProductsByFarmer(
+                        farmerId
+                )
         );
+
     }
 
 
-    // ===============================
-    // COUNT FARMER PRODUCTS
-    // ===============================
+    // ==========================================
+    // GET ONE PRODUCT FOR EDITING
+    // ==========================================
 
-    @GetMapping("/farmer/{farmerId}/count")
-    public ResponseEntity<Long> countProductsByFarmer(
+    @GetMapping("/{productId}/farmer/{farmerId}")
+    public ResponseEntity<Product> getProductByIdAndFarmer(
+
+            @PathVariable Long productId,
 
             @PathVariable Long farmerId
 
     ) {
 
-        return ResponseEntity.ok(
-
-                productService.countProductsByFarmer(farmerId)
-
-        );
-    }
-
-
-    // ===============================
-    // GET PRODUCT BY ID
-    // ===============================
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(
-
-            @PathVariable Long id
-
-    ) {
-
-        return productService.getProductById(id)
-
+        return productService
+                .getProductByIdAndFarmer(
+                        productId,
+                        farmerId
+                )
                 .map(ResponseEntity::ok)
-
                 .orElse(
-
                         ResponseEntity.notFound().build()
-
                 );
+
     }
 
 
-    // ===============================
+    // ==========================================
     // UPDATE PRODUCT
-    // ===============================
+    // ==========================================
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}/farmer/{farmerId}")
     public ResponseEntity<Product> updateProduct(
 
-            @PathVariable Long id,
+            @PathVariable Long productId,
+
+            @PathVariable Long farmerId,
 
             @RequestBody Product product
 
     ) {
 
         Product updatedProduct =
-
-                productService.updateProduct(id, product);
+                productService.updateProduct(
+                        productId,
+                        farmerId,
+                        product
+                );
 
         return ResponseEntity.ok(updatedProduct);
+
     }
 
 
-    // ===============================
+    // ==========================================
     // DELETE PRODUCT
-    // ===============================
+    // ==========================================
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}/farmer/{farmerId}")
     public ResponseEntity<Void> deleteProduct(
 
-            @PathVariable Long id
+            @PathVariable Long productId,
+
+            @PathVariable Long farmerId
 
     ) {
 
-        productService.deleteProduct(id);
+        productService.deleteProduct(
+                productId,
+                farmerId
+        );
 
         return ResponseEntity.noContent().build();
+
     }
 
 }

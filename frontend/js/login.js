@@ -6,62 +6,49 @@ const API_URL = "http://localhost:8080/api/auth/login";
 
 
 // ============================
-// Show / Hide Password
+// SHOW / HIDE PASSWORD
 // ============================
 
 function togglePassword() {
 
-    const password =
-        document.getElementById("password");
+    const password = document.getElementById("password");
 
     password.type =
         password.type === "password"
             ? "text"
             : "password";
-
 }
 
 
 // ============================
-// Mobile Validation
+// MOBILE VALIDATION
 // ============================
 
-const mobile =
-    document.getElementById("mobile");
-
+const mobile = document.getElementById("mobile");
 
 mobile.addEventListener("input", function () {
 
     mobile.value =
         mobile.value.replace(/[^0-9]/g, "");
 
-
     const error =
         document.getElementById("mobileError");
-
 
     if (mobile.value.length === 0) {
 
         error.innerHTML = "";
 
-    }
+    } else if (mobile.value.length === 10) {
 
-    else if (mobile.value.length === 10) {
-
-        error.innerHTML =
-            "✓ Valid Mobile Number";
-
+        error.innerHTML = "✓ Valid Mobile Number";
         error.style.color = "green";
 
-    }
-
-    else {
+    } else {
 
         error.innerHTML =
             "Enter 10-digit Mobile Number";
 
         error.style.color = "red";
-
     }
 
 });
@@ -99,7 +86,6 @@ document.getElementById("loginForm")
             );
 
             return;
-
         }
 
 
@@ -109,19 +95,15 @@ document.getElementById("loginForm")
 
         if (password.trim() === "") {
 
-            alert(
-                "Password is required."
-            );
+            alert("Password is required.");
 
             return;
-
         }
 
 
         const data = {
 
             mobile: mobileNumber,
-
             password: password
 
         };
@@ -135,10 +117,6 @@ document.getElementById("loginForm")
 
         try {
 
-            // ============================
-            // DISABLE BUTTON
-            // ============================
-
             loginButton.disabled = true;
 
             loginButton.innerText =
@@ -146,7 +124,7 @@ document.getElementById("loginForm")
 
 
             // ============================
-            // CALL BACKEND API
+            // LOGIN API
             // ============================
 
             const response =
@@ -155,14 +133,10 @@ document.getElementById("loginForm")
                     method: "POST",
 
                     headers: {
-
-                        "Content-Type":
-                            "application/json"
-
+                        "Content-Type": "application/json"
                     },
 
-                    body:
-                        JSON.stringify(data)
+                    body: JSON.stringify(data)
 
                 });
 
@@ -178,7 +152,7 @@ document.getElementById("loginForm")
 
 
             // ============================
-            // LOGIN FAILED
+            // CHECK LOGIN RESULT
             // ============================
 
             if (
@@ -192,47 +166,60 @@ document.getElementById("loginForm")
                 );
 
                 return;
-
             }
 
 
             // ============================
-            // CHECK USER DATA
+            // CHECK USER ID
             // ============================
 
-            if (!result.userId) {
+            if (
+                result.userId === null ||
+                result.userId === undefined
+            ) {
 
                 console.error(
-                    "userId was not returned by backend:",
+                    "User ID missing:",
                     result
                 );
 
                 alert(
-                    "Login error: User ID not received from server."
+                    "Login error: User information was not received."
                 );
 
                 return;
-
             }
 
 
+            // =====================================
+            // CLEAR OLD USER DATA FIRST
+            // VERY IMPORTANT WHEN SWITCHING USERS
+            // =====================================
+
+            sessionStorage.clear();
+
+            localStorage.removeItem("userId");
+            localStorage.removeItem("fullName");
+            localStorage.removeItem("userRole");
+
+
             // ============================
-            // SAVE SESSION INFORMATION
+            // SAVE CURRENT SESSION
             // ============================
 
             sessionStorage.setItem(
                 "userId",
-                result.userId
+                String(result.userId)
             );
 
             sessionStorage.setItem(
                 "fullName",
-                result.fullName
+                result.fullName || ""
             );
 
             sessionStorage.setItem(
                 "userRole",
-                result.role
+                result.role || ""
             );
 
 
@@ -248,88 +235,75 @@ document.getElementById("loginForm")
 
                 localStorage.setItem(
                     "userId",
-                    result.userId
+                    String(result.userId)
                 );
 
                 localStorage.setItem(
                     "fullName",
-                    result.fullName
+                    result.fullName || ""
                 );
 
                 localStorage.setItem(
                     "userRole",
-                    result.role
+                    result.role || ""
                 );
 
             }
 
-            else {
 
-                // Remove old remembered login
-
-                localStorage.removeItem("userId");
-
-                localStorage.removeItem("fullName");
-
-                localStorage.removeItem("userRole");
-
-            }
-
+            // ============================
+            // DEBUG INFORMATION
+            // ============================
 
             console.log(
-                "Logged in User ID:",
+                "Current User ID:",
                 result.userId
             );
 
             console.log(
-                "Logged in User:",
+                "Current User:",
                 result.fullName
             );
 
             console.log(
-                "Role:",
+                "Current Role:",
                 result.role
             );
 
 
             // ============================
-            // REDIRECT BASED ON ROLE
+            // REDIRECT BY ROLE
             // ============================
 
-            switch (result.role) {
+            if (result.role === "FARMER") {
 
-                case "FARMER":
-
-                    window.location.href =
-                        "farmer-dashboard.html";
-
-                    break;
-
-
-                case "BUYER":
-
-                    window.location.href =
-                        "buyer-dashboard.html";
-
-                    break;
-
-
-                case "ADVISOR":
-
-                    window.location.href =
-                        "advisor-dashboard.html";
-
-                    break;
-
-
-                default:
-
-                    alert(
-                        "Unknown User Role"
-                    );
+                window.location.href =
+                    "farmer-dashboard.html";
 
             }
 
+            else if (result.role === "BUYER") {
+
+                window.location.href =
+                    "buyer-dashboard.html";
+
+            }
+
+            else if (result.role === "ADVISOR") {
+
+                window.location.href =
+                    "advisor-dashboard.html";
+
+            }
+
+            else {
+
+                alert(
+                    "Unknown User Role: " +
+                    result.role
+                );
+
+            }
 
         }
 
@@ -340,10 +314,8 @@ document.getElementById("loginForm")
                 error
             );
 
-
             alert(
-                "Unable to connect to Spring Boot Server. " +
-                "Make sure the backend is running."
+                "Unable to connect to Spring Boot Server."
             );
 
         }
@@ -352,8 +324,7 @@ document.getElementById("loginForm")
 
             loginButton.disabled = false;
 
-            loginButton.innerText =
-                "Login";
+            loginButton.innerText = "Login";
 
         }
 

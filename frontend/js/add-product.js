@@ -1,4 +1,12 @@
 // ============================
+// PRODUCT API
+// ============================
+
+const PRODUCT_API_URL =
+    "http://localhost:8080/api/products";
+
+
+// ============================
 // GET LOGGED-IN USER
 // ============================
 
@@ -7,13 +15,18 @@ const farmerId =
     localStorage.getItem("userId");
 
 
+const userRole =
+    sessionStorage.getItem("userRole") ||
+    localStorage.getItem("userRole");
+
+
 // ============================
 // CHECK LOGIN
 // ============================
 
-if (!farmerId) {
+if (!farmerId || userRole !== "FARMER") {
 
-    alert("Please login first.");
+    alert("Please login as a farmer.");
 
     window.location.href = "login.html";
 
@@ -25,7 +38,7 @@ if (!farmerId) {
 // ============================
 
 const API_URL =
-    `http://localhost:8080/api/products/farmer/${farmerId}`;
+    `${PRODUCT_API_URL}/farmer/${farmerId}`;
 
 
 // ============================
@@ -36,17 +49,29 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-
         const productForm =
             document.getElementById("productForm");
-
 
         const imageUrlInput =
             document.getElementById("imageUrl");
 
-
         const preview =
             document.getElementById("preview");
+
+
+        // ==========================
+        // CHECK FORM
+        // ==========================
+
+        if (!productForm) {
+
+            console.error(
+                "Product form not found"
+            );
+
+            return;
+
+        }
 
 
         // ==========================
@@ -67,9 +92,7 @@ document.addEventListener(
 
                         preview.src = imageUrl;
 
-                    }
-
-                    else {
+                    } else {
 
                         preview.src =
                             "../images/no-image.png";
@@ -83,7 +106,7 @@ document.addEventListener(
 
 
         // ==========================
-        // INVALID IMAGE
+        // INVALID IMAGE HANDLING
         // ==========================
 
         if (preview) {
@@ -92,16 +115,8 @@ document.addEventListener(
                 "error",
                 function () {
 
-                    if (
-                        !preview.src.includes(
-                            "no-image.png"
-                        )
-                    ) {
-
-                        preview.src =
-                            "../images/no-image.png";
-
-                    }
+                    preview.src =
+                        "../images/no-image.png";
 
                 }
             );
@@ -119,6 +134,10 @@ document.addEventListener(
 
                 event.preventDefault();
 
+
+                // ==========================
+                // CREATE PRODUCT OBJECT
+                // ==========================
 
                 const product = {
 
@@ -192,17 +211,29 @@ document.addEventListener(
                 };
 
 
+                // ==========================
+                // DEBUG
+                // ==========================
+
                 console.log(
-                    "Farmer ID:",
+                    "Logged-in Farmer ID:",
                     farmerId
                 );
 
+                console.log(
+                    "API URL:",
+                    API_URL
+                );
 
                 console.log(
                     "Sending Product:",
                     product
                 );
 
+
+                // ==========================
+                // SEND PRODUCT TO BACKEND
+                // ==========================
 
                 try {
 
@@ -227,6 +258,10 @@ document.addEventListener(
                         );
 
 
+                    // ==========================
+                    // HANDLE SERVER ERROR
+                    // ==========================
+
                     if (!response.ok) {
 
                         const errorText =
@@ -240,18 +275,23 @@ document.addEventListener(
 
 
                         throw new Error(
-                            errorText
+                            errorText ||
+                            "Failed to add product"
                         );
 
                     }
 
+
+                    // ==========================
+                    // SUCCESS
+                    // ==========================
 
                     const savedProduct =
                         await response.json();
 
 
                     console.log(
-                        "Product Added:",
+                        "Product Added Successfully:",
                         savedProduct
                     );
 
@@ -272,6 +312,8 @@ document.addEventListener(
                     }
 
 
+                    // Redirect
+
                     window.location.href =
                         "my-products.html";
 
@@ -287,7 +329,7 @@ document.addEventListener(
 
 
                     alert(
-                        "Product could not be added."
+                        "Product could not be added. Check the browser console and Spring Boot terminal."
                     );
 
                 }

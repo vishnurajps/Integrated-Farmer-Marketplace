@@ -2,6 +2,7 @@ package com.ifmap.service;
 
 import com.ifmap.entity.Product;
 import com.ifmap.entity.User;
+import com.ifmap.entity.UserRole;
 import com.ifmap.repository.ProductRepository;
 import com.ifmap.repository.UserRepository;
 
@@ -16,11 +17,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-
-    // ===============================
-    // CONSTRUCTOR
-    // ===============================
-
     public ProductService(
             ProductRepository productRepository,
             UserRepository userRepository
@@ -28,13 +24,12 @@ public class ProductService {
 
         this.productRepository = productRepository;
         this.userRepository = userRepository;
-
     }
 
 
-    // ===============================
+    // ==========================================
     // ADD PRODUCT
-    // ===============================
+    // ==========================================
 
     public Product addProduct(
             Long farmerId,
@@ -50,70 +45,106 @@ public class ProductService {
                 );
 
 
-        // Assign product to farmer
+        // Only FARMER can add products
+
+        if (farmer.getRole() != UserRole.FARMER) {
+
+            throw new RuntimeException(
+                    "Only farmers can add products"
+            );
+
+        }
+
 
         product.setFarmer(farmer);
-
-
-        // Save product
 
         return productRepository.save(product);
 
     }
 
 
-    // ===============================
-    // GET ALL PRODUCTS BY FARMER
-    // ===============================
+    // ==========================================
+    // GET PRODUCTS OF ONE FARMER
+    // ==========================================
 
-    public List<Product> getProductsByFarmer(Long farmerId) {
+    public List<Product> getProductsByFarmer(
+            Long farmerId
+    ) {
 
-        return productRepository.findByFarmerId(farmerId);
+        return productRepository
+                .findByFarmerId(farmerId);
 
     }
 
 
-    // ===============================
+    // ==========================================
+    // GET ALL AVAILABLE PRODUCTS
+    // FROM ALL FARMERS
+    // ==========================================
+
+    public List<Product> getAvailableProducts() {
+
+        return productRepository
+                .findByAvailabilityIgnoreCase(
+                        "Available"
+                );
+
+    }
+
+
+    // ==========================================
+    // GET ONE PRODUCT
+    // ==========================================
+
+    public Optional<Product> getProductByIdAndFarmer(
+            Long productId,
+            Long farmerId
+    ) {
+
+        return productRepository
+                .findByIdAndFarmerId(
+                        productId,
+                        farmerId
+                );
+
+    }
+
+
+    // ==========================================
     // COUNT FARMER PRODUCTS
-    // ===============================
+    // ==========================================
 
-    public long countProductsByFarmer(Long farmerId) {
+    public long countProductsByFarmer(
+            Long farmerId
+    ) {
 
-        return productRepository.countByFarmerId(farmerId);
-
-    }
-
-
-    // ===============================
-    // GET PRODUCT BY ID
-    // ===============================
-
-    public Optional<Product> getProductById(Long id) {
-
-        return productRepository.findById(id);
+        return productRepository
+                .countByFarmerId(farmerId);
 
     }
 
 
-    // ===============================
+    // ==========================================
     // UPDATE PRODUCT
-    // ===============================
+    // ==========================================
 
     public Product updateProduct(
-            Long id,
+            Long productId,
+            Long farmerId,
             Product updatedProduct
     ) {
 
         Product product = productRepository
-                .findById(id)
+                .findByIdAndFarmerId(
+                        productId,
+                        farmerId
+                )
                 .orElseThrow(() ->
                         new RuntimeException(
-                                "Product not found with ID: " + id
+                                "Product not found or permission denied"
                         )
                 );
 
-
-        // Update product details
 
         product.setName(updatedProduct.getName());
 
@@ -146,29 +177,33 @@ public class ProductService {
         );
 
 
-        // Save updated product
-
         return productRepository.save(product);
 
     }
 
 
-    // ===============================
+    // ==========================================
     // DELETE PRODUCT
-    // ===============================
+    // ==========================================
 
-    public void deleteProduct(Long id) {
+    public void deleteProduct(
+            Long productId,
+            Long farmerId
+    ) {
 
-        if (!productRepository.existsById(id)) {
+        Product product = productRepository
+                .findByIdAndFarmerId(
+                        productId,
+                        farmerId
+                )
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Product not found or permission denied"
+                        )
+                );
 
-            throw new RuntimeException(
-                    "Product not found with ID: " + id
-            );
 
-        }
-
-
-        productRepository.deleteById(id);
+        productRepository.delete(product);
 
     }
 

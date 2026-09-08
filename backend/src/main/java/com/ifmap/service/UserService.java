@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import com.ifmap.dto.LoginRequest;
 import com.ifmap.dto.LoginResponse;
 import com.ifmap.dto.RegisterRequest;
+import com.ifmap.dto.UserProfileRequest;
+import com.ifmap.dto.UserProfileResponse;
 
 import com.ifmap.entity.User;
 import com.ifmap.entity.UserRole;
 
 import com.ifmap.repository.UserRepository;
+
 
 @Service
 public class UserService {
@@ -33,8 +36,6 @@ public class UserService {
     public String registerUser(RegisterRequest request) {
 
 
-        // Check mobile number
-
         if (request.getMobile() == null ||
                 request.getMobile().isBlank()) {
 
@@ -42,8 +43,6 @@ public class UserService {
 
         }
 
-
-        // Check duplicate mobile
 
         if (userRepository.existsByMobile(
                 request.getMobile())) {
@@ -53,18 +52,12 @@ public class UserService {
         }
 
 
-        // ==========================
-        // HANDLE OPTIONAL EMAIL
-        // ==========================
-
         String email = request.getEmail();
 
 
         if (email != null) {
 
             email = email.trim();
-
-            // Convert empty email to null
 
             if (email.isEmpty()) {
 
@@ -75,8 +68,6 @@ public class UserService {
         }
 
 
-        // Check duplicate email
-
         if (email != null &&
                 userRepository.existsByEmail(email)) {
 
@@ -85,11 +76,8 @@ public class UserService {
         }
 
 
-        // ==========================
-        // CREATE USER
-        // ==========================
-
         User user = new User();
+
 
         user.setFullName(request.getFullName());
 
@@ -127,8 +115,6 @@ public class UserService {
         }
 
 
-        // Save User
-
         userRepository.save(user);
 
 
@@ -137,12 +123,12 @@ public class UserService {
     }
 
 
-
     // ==========================
     // LOGIN USER
     // ==========================
 
     public LoginResponse loginUser(LoginRequest request) {
+
 
         Optional<User> userOptional =
                 userRepository.findByMobile(
@@ -153,15 +139,10 @@ public class UserService {
         if (userOptional.isEmpty()) {
 
             return new LoginResponse(
-
                     "Mobile number not registered",
-
                     "",
-
                     null,
-
                     ""
-
             );
 
         }
@@ -170,43 +151,206 @@ public class UserService {
         User user = userOptional.get();
 
 
-        // ==========================
-        // CHECK PASSWORD
-        // ==========================
-
         if (!user.getPassword()
                 .equals(request.getPassword())) {
 
             return new LoginResponse(
-
                     "Incorrect Password",
-
                     "",
-
                     null,
-
                     ""
+            );
 
+        }
+
+
+        return new LoginResponse(
+                "Login Successful",
+                user.getRole().name(),
+                user.getId(),
+                user.getFullName()
+        );
+
+    }
+
+
+    // ==========================
+    // GET USER PROFILE
+    // ==========================
+
+    public UserProfileResponse getUserProfile(Long id) {
+
+
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(() ->
+
+                        new RuntimeException(
+                                "User not found with ID: " + id
+                        )
+
+                );
+
+
+        return convertToProfileResponse(user);
+
+    }
+
+
+    // ==========================
+    // UPDATE USER PROFILE
+    // ==========================
+
+    public UserProfileResponse updateUserProfile(
+
+            Long id,
+
+            UserProfileRequest request
+
+    ) {
+
+
+        User existingUser = userRepository
+                .findById(id)
+                .orElseThrow(() ->
+
+                        new RuntimeException(
+                                "User not found with ID: " + id
+                        )
+
+                );
+
+
+        // ==========================
+        // VALIDATE MOBILE
+        // ==========================
+
+        if (request.getMobile() == null ||
+                request.getMobile().trim().isEmpty()) {
+
+            throw new RuntimeException(
+                    "Mobile number is required"
+            );
+
+        }
+
+
+        String mobile =
+                request.getMobile().trim();
+
+
+        if (!mobile.equals(existingUser.getMobile()) &&
+                userRepository.existsByMobile(mobile)) {
+
+            throw new RuntimeException(
+                    "Mobile number already registered"
             );
 
         }
 
 
         // ==========================
-        // SUCCESSFUL LOGIN
+        // HANDLE EMAIL
         // ==========================
 
-        return new LoginResponse(
+        String email = request.getEmail();
 
-                "Login Successful",
 
-                user.getRole().name(),
+        if (email != null) {
+
+            email = email.trim();
+
+            if (email.isEmpty()) {
+
+                email = null;
+
+            }
+
+        }
+
+
+        // Check duplicate email
+
+        if (email != null &&
+                !email.equals(existingUser.getEmail()) &&
+                userRepository.existsByEmail(email)) {
+
+            throw new RuntimeException(
+                    "Email already registered"
+            );
+
+        }
+
+
+        // ==========================
+        // UPDATE PROFILE
+        // ==========================
+
+        existingUser.setFullName(
+                request.getFullName()
+        );
+
+        existingUser.setMobile(
+                mobile
+        );
+
+        existingUser.setEmail(
+                email
+        );
+
+        existingUser.setState(
+                request.getState()
+        );
+
+        existingUser.setDistrict(
+                request.getDistrict()
+        );
+
+        existingUser.setAddress(
+                request.getAddress()
+        );
+
+
+        User savedUser =
+                userRepository.save(existingUser);
+
+
+        return convertToProfileResponse(
+                savedUser
+        );
+
+    }
+
+
+    // ==========================
+    // CONVERT USER TO RESPONSE
+    // ==========================
+
+    private UserProfileResponse convertToProfileResponse(
+            User user
+    ) {
+
+
+        return new UserProfileResponse(
 
                 user.getId(),
 
-                user.getFullName()
+                user.getFullName(),
+
+                user.getMobile(),
+
+                user.getEmail(),
+
+                user.getRole().name(),
+
+                user.getState(),
+
+                user.getDistrict(),
+
+                user.getAddress()
 
         );
 
     }
+
 }
