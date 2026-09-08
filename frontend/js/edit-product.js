@@ -1,61 +1,89 @@
-const API_URL = "http://localhost:8080/api/products";
+// ============================
+// API URL
+// ============================
+
+const PRODUCT_API_URL =
+    "http://localhost:8080/api/products";
 
 
-const urlParams = new URLSearchParams(window.location.search);
+// ============================
+// GET PRODUCT ID FROM URL
+// ============================
 
-const productId = urlParams.get("id");
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
 
 
-document.addEventListener("DOMContentLoaded", function () {
+const productId =
+    urlParams.get("id");
 
-    // Check product ID
 
-    if (!productId) {
+// ============================
+// CHECK PRODUCT ID
+// ============================
 
-        alert("Product ID not found!");
+if (!productId) {
 
-        window.location.href = "my-products.html";
+    alert(
+        "Product ID not found."
+    );
 
-        return;
+
+    window.location.href =
+        "my-products.html";
+
+}
+
+
+// ============================
+// PAGE LOAD
+// ============================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadProduct();
 
     }
+);
 
 
-    // Load existing product
-
-    loadProduct();
-
-
-    // Update product
-
-    document
-        .getElementById("editProductForm")
-        .addEventListener("submit", updateProduct);
-
-});
-
-
-// ======================================
-// LOAD PRODUCT DETAILS
-// ======================================
+// ============================
+// LOAD PRODUCT
+// ============================
 
 async function loadProduct() {
 
+
     try {
 
-        const response = await fetch(
-            `${API_URL}/${productId}`
-        );
+
+        const response =
+            await fetch(
+                `${PRODUCT_API_URL}/${productId}`
+            );
 
 
         if (!response.ok) {
 
-            throw new Error("Product not found");
+            throw new Error(
+                "Product not found"
+            );
 
         }
 
 
-        const product = await response.json();
+        const product =
+            await response.json();
+
+
+        console.log(
+            "Product Loaded:",
+            product
+        );
 
 
         // Fill form
@@ -63,145 +91,212 @@ async function loadProduct() {
         document.getElementById("name").value =
             product.name || "";
 
+
         document.getElementById("category").value =
             product.category || "";
 
+
         document.getElementById("quantity").value =
-            product.quantity || "";
+            product.quantity ?? "";
+
 
         document.getElementById("unit").value =
             product.unit || "";
 
+
         document.getElementById("price").value =
-            product.price || "";
+            product.price ?? "";
+
 
         document.getElementById("harvestDate").value =
             product.harvestDate || "";
 
+
         document.getElementById("location").value =
             product.location || "";
+
 
         document.getElementById("description").value =
             product.description || "";
 
+
         document.getElementById("availability").value =
-            product.availability || "";
+            product.availability || "Available";
+
 
         document.getElementById("imageUrl").value =
             product.imageUrl || "";
 
 
-    } catch (error) {
+    }
 
-        console.error(error);
+    catch (error) {
 
-        alert("Unable to load product details.");
 
-        window.location.href =
-            "my-products.html";
+        console.error(
+            "Load Product Error:",
+            error
+        );
+
+
+        alert(
+            "Unable to load product."
+        );
 
     }
 
 }
 
 
-// ======================================
+// ============================
 // UPDATE PRODUCT
-// ======================================
+// ============================
 
-async function updateProduct(event) {
-
-    event.preventDefault();
-
-
-    const product = {
-
-        name:
-            document.getElementById("name").value,
-
-        category:
-            document.getElementById("category").value,
-
-        quantity:
-            parseFloat(
-                document.getElementById("quantity").value
-            ),
-
-        unit:
-            document.getElementById("unit").value,
-
-        price:
-            parseFloat(
-                document.getElementById("price").value
-            ),
-
-        harvestDate:
-            document.getElementById("harvestDate").value || null,
-
-        location:
-            document.getElementById("location").value,
-
-        description:
-            document.getElementById("description").value,
-
-        availability:
-            document.getElementById("availability").value,
-
-        imageUrl:
-            document.getElementById("imageUrl").value || null
-
-    };
+document
+    .getElementById("editProductForm")
+    .addEventListener(
+        "submit",
+        async function (event) {
 
 
-    try {
+            event.preventDefault();
 
-        const response = await fetch(
 
-            `${API_URL}/${productId}`,
+            const product = {
 
-            {
 
-                method: "PUT",
+                name:
+                    document.getElementById("name")
+                        .value
+                        .trim(),
 
-                headers: {
 
-                    "Content-Type": "application/json"
+                category:
+                    document.getElementById("category")
+                        .value
+                        .trim(),
 
-                },
 
-                body: JSON.stringify(product)
+                quantity:
+                    parseFloat(
+                        document
+                            .getElementById("quantity")
+                            .value
+                    ),
+
+
+                unit:
+                    document.getElementById("unit")
+                        .value
+                        .trim(),
+
+
+                price:
+                    parseFloat(
+                        document
+                            .getElementById("price")
+                            .value
+                    ),
+
+
+                harvestDate:
+                    document
+                        .getElementById("harvestDate")
+                        .value || null,
+
+
+                location:
+                    document
+                        .getElementById("location")
+                        .value
+                        .trim(),
+
+
+                description:
+                    document
+                        .getElementById("description")
+                        .value
+                        .trim(),
+
+
+                availability:
+                    document
+                        .getElementById("availability")
+                        .value,
+
+
+                imageUrl:
+                    document
+                        .getElementById("imageUrl")
+                        .value
+                        .trim() || null
+
+            };
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        `${PRODUCT_API_URL}/${productId}`,
+
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(product)
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+
+                    throw new Error(
+                        errorText
+                    );
+
+                }
+
+
+                alert(
+                    "Product updated successfully!"
+                );
+
+
+                window.location.href =
+                    "my-products.html";
+
 
             }
 
-        );
+            catch (error) {
 
 
-        if (!response.ok) {
+                console.error(
+                    "Update Error:",
+                    error
+                );
 
-            throw new Error(
-                "Failed to update product"
-            );
+
+                alert(
+                    "Unable to update product."
+                );
+
+            }
 
         }
-
-
-        alert(
-            "Product updated successfully!"
-        );
-
-
-        window.location.href =
-            "my-products.html";
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Error updating product. Please try again."
-        );
-
-    }
-
-}
+    );

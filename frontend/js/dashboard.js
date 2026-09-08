@@ -1,151 +1,306 @@
-// ===============================
-// CURRENT DATE
-// ===============================
+const PRODUCT_API_URL = "http://localhost:8080/api/products";
 
-const currentDate = document.getElementById("currentDate");
+// ============================
+// CHECK LOGIN
+// ============================
 
-if (currentDate) {
+const userId =
+    sessionStorage.getItem("userId") ||
+    localStorage.getItem("userId");
 
-    const today = new Date();
+const fullName =
+    sessionStorage.getItem("fullName") ||
+    localStorage.getItem("fullName");
 
-    currentDate.innerHTML = today.toLocaleDateString(
-        "en-IN",
-        {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
+const userRole =
+    sessionStorage.getItem("userRole") ||
+    localStorage.getItem("userRole");
+
+
+// Redirect if user is not logged in
+
+if (!userId) {
+
+    window.location.href = "login.html";
 
 }
 
 
-// ===============================
-// GET LOGGED-IN USER
-// ===============================
+// Prevent other roles from opening Farmer Dashboard
 
-const userName = localStorage.getItem("userName");
+if (userRole !== "FARMER") {
 
-if (userName) {
+    window.location.href = "login.html";
 
-    const navbarName =
+}
+
+
+// ============================
+// PAGE LOAD
+// ============================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ==========================
+    // DISPLAY USER NAME
+    // ==========================
+
+    const userName =
         document.getElementById("userName");
 
     const welcomeName =
         document.getElementById("welcomeName");
 
 
-    if (navbarName) {
+    if (userName) {
 
-        navbarName.innerHTML = userName;
+        userName.textContent =
+            fullName || "Farmer";
 
     }
 
 
     if (welcomeName) {
 
-        welcomeName.innerHTML = userName;
+        welcomeName.textContent =
+            fullName || "Farmer";
+
+    }
+
+
+    // ==========================
+    // CURRENT DATE
+    // ==========================
+
+    const currentDate =
+        document.getElementById("currentDate");
+
+
+    if (currentDate) {
+
+        const today = new Date();
+
+        currentDate.textContent =
+            today.toDateString();
+
+    }
+
+
+    // ==========================
+    // LOAD DASHBOARD PRODUCTS
+    // ==========================
+
+    loadDashboardProducts();
+
+});
+
+
+// ============================
+// LOAD DASHBOARD PRODUCTS
+// ============================
+
+async function loadDashboardProducts() {
+
+    try {
+
+        const response = await fetch(
+            `${PRODUCT_API_URL}/farmer/${userId}`
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load farmer products"
+            );
+
+        }
+
+
+        const products =
+            await response.json();
+
+
+        // ==========================
+        // PRODUCT COUNT
+        // ==========================
+
+        const productCount =
+            document.getElementById("productCount");
+
+
+        if (productCount) {
+
+            productCount.textContent =
+                products.length;
+
+        }
+
+
+        // ==========================
+        // RECENT PRODUCTS
+        // ==========================
+
+        displayRecentProducts(products);
+
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard Error:",
+            error
+        );
+
+        const productCount =
+            document.getElementById("productCount");
+
+
+        if (productCount) {
+
+            productCount.textContent = "0";
+
+        }
 
     }
 
 }
 
 
-// ===============================
-// LOGOUT
-// ===============================
+// ============================
+// DISPLAY RECENT PRODUCTS
+// ============================
 
-function logoutUser() {
+function displayRecentProducts(products) {
 
-    const confirmLogout =
-        confirm("Are you sure you want to logout?");
-
-
-    if (confirmLogout) {
-
-        // Remove login information
-
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userRole");
-        localStorage.removeItem("userMobile");
+    const tableBody =
+        document.getElementById("recentProducts");
 
 
-        // Go to home page
+    if (!tableBody) {
 
-        window.location.href = "../index.html";
+        console.error(
+            "recentProducts table body not found"
+        );
+
+        return;
 
     }
 
-}
+
+    // Clear existing rows
+
+    tableBody.innerHTML = "";
 
 
-// ===============================
-// DARK MODE
-// ===============================
+    // ==========================
+    // NO PRODUCTS
+    // ==========================
 
-const themeButton =
-    document.getElementById("themeButton");
+    if (!products || products.length === 0) {
 
+        tableBody.innerHTML = `
 
-if (themeButton) {
+            <tr>
 
-    themeButton.addEventListener(
-        "click",
-        function () {
+                <td colspan="4"
+                    class="text-center text-muted">
 
-            document.body.classList.toggle("dark-mode");
+                    No products added yet
 
-        }
-    );
+                </td>
 
-}
+            </tr>
 
+        `;
 
-// ===============================
-// SALES CHART
-// ===============================
+        return;
 
-const chartElement =
-    document.getElementById("salesChart");
+    }
 
 
-if (chartElement) {
+    // ==========================
+    // SHOW LAST 5 PRODUCTS
+    // ==========================
 
-    new Chart(chartElement, {
+    const recentProducts =
+        products.slice(-5).reverse();
 
-        type: "bar",
 
-        data: {
+    recentProducts.forEach(function (product) {
 
-            labels: [],
+        const row = `
 
-            datasets: [{
+            <tr>
 
-                label: "Monthly Sales",
+                <td>
+                    ${product.name || "-"}
+                </td>
 
-                data: []
+                <td>
+                    ${product.category || "-"}
+                </td>
 
-            }]
+                <td>
+                    ${product.quantity ?? "-"}
+                    ${product.unit || ""}
+                </td>
 
-        },
+                <td>
+                    ₹${product.price ?? "-"}
+                    ${product.unit ? "/" + product.unit : ""}
+                </td>
 
-        options: {
+            </tr>
 
-            responsive: true,
+        `;
 
-            plugins: {
 
-                legend: {
-
-                    display: true
-
-                }
-
-            }
-
-        }
+        tableBody.innerHTML += row;
 
     });
+
+    // ========================================
+// LOGOUT
+// ========================================
+
+function logout() {
+
+    const confirmLogout =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+
+    if (!confirmLogout) {
+
+        return;
+
+    }
+
+
+    // Clear session login
+
+    sessionStorage.removeItem("userId");
+
+    sessionStorage.removeItem("fullName");
+
+    sessionStorage.removeItem("userRole");
+
+
+    // Clear remembered login
+
+    localStorage.removeItem("userId");
+
+    localStorage.removeItem("fullName");
+
+    localStorage.removeItem("userRole");
+
+
+    // Redirect to login
+
+    window.location.href =
+        "login.html";
+
+}
 
 }

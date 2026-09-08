@@ -15,42 +15,66 @@ public class ProductController {
 
     private final ProductService productService;
 
-
     public ProductController(ProductService productService) {
-
         this.productService = productService;
-
     }
 
 
     // ===============================
-    // ADD PRODUCT
+    // ADD PRODUCT FOR FARMER
     // ===============================
 
-    @PostMapping
+    @PostMapping("/farmer/{farmerId}")
     public ResponseEntity<Product> addProduct(
+
+            @PathVariable Long farmerId,
+
             @RequestBody Product product
+
     ) {
 
         Product savedProduct =
-                productService.addProduct(product);
+                productService.addProduct(farmerId, product);
 
         return ResponseEntity.ok(savedProduct);
-
     }
 
 
     // ===============================
-    // GET ALL PRODUCTS
+    // GET PRODUCTS BY FARMER
     // ===============================
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    @GetMapping("/farmer/{farmerId}")
+    public ResponseEntity<List<Product>> getProductsByFarmer(
+
+            @PathVariable Long farmerId
+
+    ) {
 
         return ResponseEntity.ok(
-                productService.getAllProducts()
-        );
 
+                productService.getProductsByFarmer(farmerId)
+
+        );
+    }
+
+
+    // ===============================
+    // COUNT FARMER PRODUCTS
+    // ===============================
+
+    @GetMapping("/farmer/{farmerId}/count")
+    public ResponseEntity<Long> countProductsByFarmer(
+
+            @PathVariable Long farmerId
+
+    ) {
+
+        return ResponseEntity.ok(
+
+                productService.countProductsByFarmer(farmerId)
+
+        );
     }
 
 
@@ -60,15 +84,20 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(
+
             @PathVariable Long id
+
     ) {
 
         return productService.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(
-                        ResponseEntity.notFound().build()
-                );
 
+                .map(ResponseEntity::ok)
+
+                .orElse(
+
+                        ResponseEntity.notFound().build()
+
+                );
     }
 
 
@@ -78,15 +107,18 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
+
             @PathVariable Long id,
+
             @RequestBody Product product
+
     ) {
 
         Product updatedProduct =
+
                 productService.updateProduct(id, product);
 
         return ResponseEntity.ok(updatedProduct);
-
     }
 
 
@@ -96,13 +128,14 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(
+
             @PathVariable Long id
+
     ) {
 
         productService.deleteProduct(id);
 
         return ResponseEntity.noContent().build();
-
     }
 
 }

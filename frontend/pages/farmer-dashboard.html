@@ -9,29 +9,27 @@
     <title>Farmer Dashboard | IFMAP</title>
 
     <!-- Bootstrap CSS -->
-
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Dashboard CSS -->
-
     <link rel="stylesheet" href="../css/dashboard.css">
 
 </head>
 
+
 <body>
 
 
-<!-- ========================= -->
+<!-- ================================= -->
 <!-- NAVBAR -->
-<!-- ========================= -->
+<!-- ================================= -->
 
 <nav class="navbar navbar-expand-lg dashboard-navbar">
 
@@ -51,9 +49,10 @@
 
         <div class="d-flex align-items-center">
 
-            <!-- Notification -->
 
-            <a href="farmer-notifications.html"
+            <!-- Notifications -->
+
+            <a href="notifications.html"
                class="btn btn-light me-3">
 
                 <i class="bi bi-bell"></i>
@@ -64,35 +63,37 @@
             <!-- Theme -->
 
             <button
-                class="btn btn-light me-3"
-                id="themeButton"
-                type="button">
+                    class="btn btn-light me-3"
+                    id="themeButton"
+                    type="button">
 
                 <i class="bi bi-moon"></i>
 
             </button>
 
 
-            <!-- Profile Image -->
+            <!-- Profile -->
 
-            <a href="farmer-profile.html">
+            <a href="profile.html">
 
                 <img
-                    src="../images/profile.png"
-                    class="profile-img"
-                    alt="Profile">
+                        src="../images/profile.png"
+                        class="profile-img"
+                        alt="Profile">
 
             </a>
 
 
             <!-- User Name -->
 
-            <span class="text-white ms-2"
-                  id="userName">
+            <span
+                    class="text-white ms-2"
+                    id="userName">
 
                 Farmer
 
             </span>
+
 
         </div>
 
@@ -102,90 +103,159 @@
 
 
 
-<!-- ========================= -->
+<!-- ================================= -->
 <!-- DASHBOARD -->
-<!-- ========================= -->
+<!-- ================================= -->
 
 <div class="dashboard">
 
 
-    <!-- ========================= -->
+    <!-- ================================= -->
     <!-- SIDEBAR -->
-    <!-- ========================= -->
+    <!-- ================================= -->
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-    <ul>
-
-        <li class="active">
-            <a href="farmer-dashboard.html">
-                <i class="bi bi-speedometer2"></i>
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="my-products.html">
-                <i class="bi bi-box-seam"></i>
-                My Products
-            </a>
-        </li>
-
-        <li>
-            <a href="add-product.html">
-                <i class="bi bi-plus-circle"></i>
-                Add Product
-            </a>
-        </li>
-
-        <li>
-            <a href="orders.html">
-                <i class="bi bi-bag"></i>
-                Orders
-            </a>
-        </li>
-
-        <li>
-            <a href="earnings.html">
-                <i class="bi bi-cash-stack"></i>
-                Earnings
-            </a>
-        </li>
-
-        <li>
-            <a href="notifications.html">
-                <i class="bi bi-bell"></i>
-                Notifications
-            </a>
-        </li>
-
-        <li>
-            <a href="profile.html">
-                <i class="bi bi-person"></i>
-                Profile
-            </a>
-        </li>
-
-        <li>
-            <a href="../index.html">
-                <i class="bi bi-box-arrow-right"></i>
-                Logout
-            </a>
-        </li>
-
-    </ul>
-
-</aside>
+        <ul>
 
 
-    <!-- ========================= -->
+            <!-- Dashboard -->
+
+            <li class="active">
+
+                <a href="farmer-dashboard.html">
+
+                    <i class="bi bi-speedometer2"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+
+            <!-- My Products -->
+
+            <li>
+
+                <a href="my-products.html">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    My Products
+
+                </a>
+
+            </li>
+
+
+            <!-- Add Product -->
+
+            <li>
+
+                <a href="add-product.html">
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Add Product
+
+                </a>
+
+            </li>
+
+
+            <!-- Orders -->
+
+            <li>
+
+                <a href="orders.html">
+
+                    <i class="bi bi-bag"></i>
+
+                    Orders
+
+                </a>
+
+            </li>
+
+
+            <!-- Earnings -->
+
+            <li>
+
+                <a href="earnings.html">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                    Earnings
+
+                </a>
+
+            </li>
+
+
+            <!-- Notifications -->
+
+            <li>
+
+                <a href="notifications.html">
+
+                    <i class="bi bi-bell"></i>
+
+                    Notifications
+
+                </a>
+
+            </li>
+
+
+            <!-- Profile -->
+
+            <li>
+
+                <a href="profile.html">
+
+                    <i class="bi bi-person"></i>
+
+                    Profile
+
+                </a>
+
+            </li>
+
+
+            <!-- Logout -->
+
+            <li>
+
+                <a href="../index.html"
+                   onclick="logoutUser(event)">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    Logout
+
+                </a>
+
+            </li>
+
+
+        </ul>
+
+    </aside>
+
+
+
+    <!-- ================================= -->
     <!-- MAIN CONTENT -->
-    <!-- ========================= -->
+    <!-- ================================= -->
 
     <main class="content">
 
 
-        <!-- Welcome -->
+        <!-- ================================= -->
+        <!-- WELCOME SECTION -->
+        <!-- ================================= -->
 
         <div class="welcome-section">
 
@@ -194,10 +264,15 @@
                 <h2>
 
                     Welcome Back,
-                    <span id="welcomeName">Farmer</span>
+
+                    <span id="welcomeName">
+                        Farmer
+                    </span>
+
                     👋
 
                 </h2>
+
 
                 <p id="currentDate"></p>
 
@@ -207,20 +282,20 @@
 
 
 
-        <!-- ========================= -->
+        <!-- ================================= -->
         <!-- STATISTICS CARDS -->
-        <!-- ========================= -->
+        <!-- ================================= -->
 
         <div class="cards">
 
 
-            <!-- Products -->
+            <!-- PRODUCTS -->
 
             <div class="card-box">
 
                 <i class="bi bi-box-seam-fill"></i>
 
-                <h3 id="productTotal">0</h3>
+                <h3 id="productCount">0</h3>
 
                 <p>Products</p>
 
@@ -228,7 +303,7 @@
 
 
 
-            <!-- Orders -->
+            <!-- ORDERS -->
 
             <div class="card-box">
 
@@ -242,7 +317,7 @@
 
 
 
-            <!-- Earnings -->
+            <!-- EARNINGS -->
 
             <div class="card-box">
 
@@ -256,7 +331,7 @@
 
 
 
-            <!-- Rating -->
+            <!-- RATING -->
 
             <div class="card-box">
 
@@ -273,17 +348,36 @@
 
 
 
-        <!-- ========================= -->
+        <!-- ================================= -->
         <!-- RECENT PRODUCTS -->
-        <!-- ========================= -->
+        <!-- ================================= -->
 
         <div class="table-section">
 
-            <h4>🌾 Recent Products</h4>
+            <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <table class="table table-hover">
+                <h4 class="mb-0">
 
-                <thead>
+                    🌾 Recent Products
+
+                </h4>
+
+
+                <a href="my-products.html"
+                   class="btn btn-success btn-sm">
+
+                    View All
+
+                </a>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
 
                     <tr>
 
@@ -297,41 +391,64 @@
 
                     </tr>
 
-                </thead>
+                    </thead>
 
 
-                <tbody id="recentProducts">
+                    <!-- PRODUCTS WILL LOAD HERE -->
 
-                    <tr>
+                    <tbody id="recentProducts">
 
-                        <td colspan="4"
-                            class="text-center text-muted">
+                        <tr>
 
-                            No products available
+                            <td colspan="4"
+                                class="text-center text-muted">
 
-                        </td>
+                                Loading products...
 
-                    </tr>
+                            </td>
 
-                </tbody>
+                        </tr>
 
-            </table>
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
 
 
-        <!-- ========================= -->
+        <!-- ================================= -->
         <!-- RECENT ORDERS -->
-        <!-- ========================= -->
+        <!-- ================================= -->
 
         <div class="table-section">
 
-            <h4>📦 Recent Orders</h4>
+            <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <table class="table table-hover">
+                <h4 class="mb-0">
 
-                <thead>
+                    📦 Recent Orders
+
+                </h4>
+
+
+                <a href="orders.html"
+                   class="btn btn-success btn-sm">
+
+                    View All
+
+                </a>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
 
                     <tr>
 
@@ -345,38 +462,40 @@
 
                     </tr>
 
-                </thead>
+                    </thead>
 
 
-                <tbody id="recentOrders">
+                    <tbody id="recentOrders">
 
-                    <tr>
+                        <tr>
 
-                        <td colspan="4"
-                            class="text-center text-muted">
+                            <td colspan="4"
+                                class="text-center text-muted">
 
-                            No orders available
+                                No orders available
 
-                        </td>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
+
+            </div>
 
         </div>
 
 
 
-        <!-- ========================= -->
-        <!-- INFORMATION -->
-        <!-- ========================= -->
+        <!-- ================================= -->
+        <!-- INFORMATION CARDS -->
+        <!-- ================================= -->
 
         <div class="row">
 
 
-            <!-- Weather -->
+            <!-- WEATHER -->
 
             <div class="col-lg-4">
 
@@ -384,28 +503,21 @@
 
                     <h4>🌤 Weather</h4>
 
-                    <h2>--°C</h2>
+                    <h2 id="temperature">
 
-                    <p>Weather information coming soon</p>
+                        --°C
 
-                </div>
+                    </h2>
 
-            </div>
+                    <p id="weatherDescription">
 
+                        Weather information coming soon
 
+                    </p>
 
-            <!-- Farming Tip -->
+                    <p id="weatherLocation">
 
-            <div class="col-lg-4">
-
-                <div class="info-card">
-
-                    <h4>🌱 Today's Farming Tip</h4>
-
-                    <p>
-
-                        Add your farming advisory
-                        recommendations here.
+                        --
 
                     </p>
 
@@ -415,7 +527,28 @@
 
 
 
-            <!-- Notifications -->
+            <!-- FARMING TIP -->
+
+            <div class="col-lg-4">
+
+                <div class="info-card">
+
+                    <h4>🌱 Today's Farming Tip</h4>
+
+                    <p>
+
+                        Regularly monitor soil moisture before
+                        irrigating your crops to avoid water wastage.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NOTIFICATIONS -->
 
             <div class="col-lg-4">
 
@@ -423,9 +556,13 @@
 
                     <h4>🔔 Notifications</h4>
 
-                    <ul>
+                    <ul id="dashboardNotifications">
 
-                        <li>No new notifications</li>
+                        <li>
+
+                            No new notifications
+
+                        </li>
 
                     </ul>
 
@@ -438,13 +575,18 @@
 
 
 
-        <!-- ========================= -->
+        <!-- ================================= -->
         <!-- MONTHLY SALES -->
-        <!-- ========================= -->
+        <!-- ================================= -->
 
         <div class="table-section">
 
-            <h4>📈 Monthly Sales</h4>
+            <h4>
+
+                📈 Monthly Sales
+
+            </h4>
+
 
             <canvas id="salesChart"></canvas>
 
@@ -456,14 +598,32 @@
 
 </div>
 
+<li>
+
+    <a href="#" onclick="logout()">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        Logout
+
+    </a>
+
+</li>
 
 
-<!-- Chart.js -->
+<!-- ================================= -->
+<!-- CHART.JS -->
+<!-- ================================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
 
 
-<!-- Dashboard JavaScript -->
+
+<!-- ================================= -->
+<!-- DASHBOARD JAVASCRIPT -->
+<!-- ================================= -->
 
 <script src="../js/dashboard.js"></script>
 

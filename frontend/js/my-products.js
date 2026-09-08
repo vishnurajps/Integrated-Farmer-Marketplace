@@ -1,48 +1,118 @@
-const API_URL = "http://localhost:8080/api/products";
+// ============================
+// API URL
+// ============================
+
+const PRODUCT_API_URL =
+    "http://localhost:8080/api/products";
+
+
+// ============================
+// GET LOGGED-IN USER
+// ============================
+
+const userId =
+    sessionStorage.getItem("userId") ||
+    localStorage.getItem("userId");
+
+
+const userRole =
+    sessionStorage.getItem("userRole") ||
+    localStorage.getItem("userRole");
+
+
+// ============================
+// CHECK LOGIN
+// ============================
+
+if (!userId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// ============================
+// CHECK FARMER ROLE
+// ============================
+
+if (userRole !== "FARMER") {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// ============================
+// STORE PRODUCTS
+// ============================
 
 let allProducts = [];
 
 
-document.addEventListener("DOMContentLoaded", function () {
+// ============================
+// PAGE LOAD
+// ============================
 
-    loadProducts();
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-
-    document
-        .getElementById("searchProduct")
-        .addEventListener("input", filterProducts);
-
-
-    document
-        .getElementById("categoryFilter")
-        .addEventListener("change", filterProducts);
-
-});
+        loadProducts();
 
 
-// ===============================
-// LOAD PRODUCTS FROM DATABASE
-// ===============================
+        // ============================
+        // SEARCH
+        // ============================
+
+        document
+            .getElementById("searchProduct")
+            .addEventListener(
+                "input",
+                filterProducts
+            );
+
+
+        // ============================
+        // CATEGORY FILTER
+        // ============================
+
+        document
+            .getElementById("categoryFilter")
+            .addEventListener(
+                "change",
+                filterProducts
+            );
+
+    }
+);
+
+
+// ============================
+// LOAD FARMER PRODUCTS
+// ============================
 
 async function loadProducts() {
 
     const tableBody =
-        document.getElementById("productTableBody");
-
-
-    tableBody.innerHTML = `
-        <tr>
-            <td colspan="7" class="text-center">
-                Loading products...
-            </td>
-        </tr>
-    `;
+        document.getElementById(
+            "productTableBody"
+        );
 
 
     try {
 
+        console.log(
+            "Loading products for Farmer ID:",
+            userId
+        );
+
+
         const response =
-            await fetch(API_URL);
+            await fetch(
+                `${PRODUCT_API_URL}/farmer/${userId}`
+            );
 
 
         if (!response.ok) {
@@ -58,24 +128,45 @@ async function loadProducts() {
             await response.json();
 
 
-        displayProducts(allProducts);
+        console.log(
+            "Farmer Products:",
+            allProducts
+        );
 
 
-    } catch (error) {
+        displayProducts(
+            allProducts
+        );
 
-        console.error(error);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load Products Error:",
+            error
+        );
 
 
         tableBody.innerHTML = `
+
             <tr>
-                <td colspan="7"
+
+                <td
+                    colspan="7"
                     class="text-center text-danger">
 
-                    Unable to connect to server.
+                    Unable to load products.
+
+                    <br>
+
                     Make sure Spring Boot is running.
 
                 </td>
+
             </tr>
+
         `;
 
     }
@@ -83,121 +174,214 @@ async function loadProducts() {
 }
 
 
-// ===============================
+// ============================
 // DISPLAY PRODUCTS
-// ===============================
+// ============================
 
 function displayProducts(products) {
 
     const tableBody =
-        document.getElementById("productTableBody");
+        document.getElementById(
+            "productTableBody"
+        );
 
+
+    // Clear table
 
     tableBody.innerHTML = "";
 
 
-    if (products.length === 0) {
+    // ============================
+    // NO PRODUCTS
+    // ============================
+
+    if (!products ||
+        products.length === 0) {
+
 
         tableBody.innerHTML = `
+
             <tr>
-                <td colspan="7"
-                    class="text-center">
+
+                <td
+                    colspan="7"
+                    class="text-center text-muted">
 
                     No products found.
 
+                    <br>
+
+                    <a
+                        href="add-product.html"
+                        class="btn btn-success btn-sm mt-2">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Add Your First Product
+
+                    </a>
+
                 </td>
+
             </tr>
+
         `;
+
 
         return;
 
     }
 
 
+    // ============================
+    // DISPLAY EACH PRODUCT
+    // ============================
+
     products.forEach(function (product) {
 
-        let imageDisplay = "🌾";
 
+        // ============================
+        // IMAGE
+        // ============================
 
-        if (
+        const imageUrl =
             product.imageUrl &&
             product.imageUrl.trim() !== ""
-        ) {
 
-            imageDisplay = `
-                <img
-                    src="${product.imageUrl}"
-                    alt="${product.name}"
-                    width="50"
-                    height="50"
-                    style="
-                        object-fit:cover;
-                        border-radius:8px;
-                    "
-                >
-            `;
+                ? product.imageUrl
 
-        }
+                : "../images/no-image.png";
 
 
-        let statusClass =
-            product.availability === "Available"
+        // ============================
+        // STATUS
+        // ============================
+
+        const status =
+            product.availability || "Available";
+
+
+        const statusClass =
+            status.toLowerCase() === "available"
+
                 ? "bg-success"
+
                 : "bg-secondary";
 
+
+        // ============================
+        // CREATE ROW
+        // ============================
 
         const row = `
 
             <tr>
 
+
+                <!-- IMAGE -->
+
                 <td>
-                    ${imageDisplay}
+
+                    <img
+                        src="${imageUrl}"
+                        alt="${product.name}"
+                        width="65"
+                        height="65"
+                        style="
+                            object-fit: cover;
+                            border-radius: 8px;
+                        "
+
+                        onerror="
+                            this.src='../images/no-image.png'
+                        ">
+
                 </td>
 
 
+
+                <!-- PRODUCT -->
+
                 <td>
-                    ${product.name}
+
+                    ${product.name || "-"}
+
                 </td>
 
 
+
+                <!-- CATEGORY -->
+
                 <td>
-                    ${product.category}
+
+                    ${product.category || "-"}
+
                 </td>
 
 
+
+                <!-- QUANTITY -->
+
                 <td>
-                    ${product.quantity}
-                    ${product.unit}
+
+                    ${product.quantity ?? "-"}
+
+                    ${product.unit || ""}
+
                 </td>
 
 
+
+                <!-- PRICE -->
+
                 <td>
-                    ₹${product.price}
-                    /${product.unit}
+
+                    ₹${product.price ?? "-"}
+
+                    ${product.unit
+                        ? "/" + product.unit
+                        : ""
+                    }
+
                 </td>
 
 
+
+                <!-- STATUS -->
+
                 <td>
 
-                    <span class="badge ${statusClass}">
+                    <span
+                        class="badge ${statusClass}">
 
-                        ${product.availability}
+                        ${status}
 
                     </span>
 
                 </td>
 
 
+
+                <!-- ACTION -->
+
                 <td>
 
+
+                    <!-- EDIT -->
+
                     <button
-                        class="btn btn-warning btn-sm"
+                        class="btn btn-primary btn-sm me-1"
                         onclick="editProduct(${product.id})">
 
                         <i class="bi bi-pencil-square"></i>
 
+                        Edit
+
                     </button>
 
+
+
+                    <!-- DELETE -->
 
                     <button
                         class="btn btn-danger btn-sm"
@@ -205,9 +389,13 @@ function displayProducts(products) {
 
                         <i class="bi bi-trash"></i>
 
+                        Delete
+
                     </button>
 
+
                 </td>
+
 
             </tr>
 
@@ -221,17 +409,19 @@ function displayProducts(products) {
 }
 
 
-// ===============================
+// ============================
 // SEARCH + FILTER
-// ===============================
+// ============================
 
 function filterProducts() {
+
 
     const searchText =
         document
             .getElementById("searchProduct")
             .value
-            .toLowerCase();
+            .toLowerCase()
+            .trim();
 
 
     const category =
@@ -243,45 +433,72 @@ function filterProducts() {
     const filteredProducts =
         allProducts.filter(function (product) {
 
-            const matchesSearch =
 
+            // Search by name
+
+            const matchesSearch =
                 product.name
                     .toLowerCase()
                     .includes(searchText);
 
 
+            // Filter by category
+
             const matchesCategory =
 
-                category === "All" ||
+                category === "All"
+
+                ||
+
                 product.category === category;
 
 
-            return (
-                matchesSearch &&
-                matchesCategory
-            );
+            return matchesSearch &&
+                matchesCategory;
 
         });
 
 
-    displayProducts(filteredProducts);
+    displayProducts(
+        filteredProducts
+    );
 
 }
 
 
-// ===============================
+// ============================
+// EDIT PRODUCT
+// ============================
+
+function editProduct(productId) {
+
+
+    console.log(
+        "Editing Product ID:",
+        productId
+    );
+
+
+    window.location.href =
+        `edit-product.html?id=${productId}`;
+
+}
+
+
+// ============================
 // DELETE PRODUCT
-// ===============================
+// ============================
 
-async function deleteProduct(id) {
+async function deleteProduct(productId) {
 
-    const confirmed =
+
+    const confirmDelete =
         confirm(
             "Are you sure you want to delete this product?"
         );
 
 
-    if (!confirmed) {
+    if (!confirmDelete) {
 
         return;
 
@@ -290,9 +507,11 @@ async function deleteProduct(id) {
 
     try {
 
+
         const response =
             await fetch(
-                `${API_URL}/${id}`,
+                `${PRODUCT_API_URL}/${productId}`,
+
                 {
                     method: "DELETE"
                 }
@@ -313,16 +532,24 @@ async function deleteProduct(id) {
         );
 
 
+        // Reload products
+
         loadProducts();
 
 
-    } catch (error) {
+    }
 
-        console.error(error);
+    catch (error) {
+
+
+        console.error(
+            "Delete Error:",
+            error
+        );
 
 
         alert(
-            "Error deleting product."
+            "Unable to delete product."
         );
 
     }
@@ -330,13 +557,68 @@ async function deleteProduct(id) {
 }
 
 
-// ===============================
-// EDIT PRODUCT
-// ===============================
+// ============================
+// LOGOUT
+// ============================
 
-function editProduct(id) {
+function logout() {
+
+
+    const confirmLogout =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+
+    if (!confirmLogout) {
+
+        return;
+
+    }
+
+
+    // ============================
+    // CLEAR SESSION STORAGE
+    // ============================
+
+    sessionStorage.removeItem(
+        "userId"
+    );
+
+    sessionStorage.removeItem(
+        "fullName"
+    );
+
+    sessionStorage.removeItem(
+        "userRole"
+    );
+
+
+    // ============================
+    // CLEAR LOCAL STORAGE
+    // ============================
+
+    localStorage.removeItem(
+        "userId"
+    );
+
+    localStorage.removeItem(
+        "fullName"
+    );
+
+    localStorage.removeItem(
+        "userRole"
+    );
+
+
+    console.log(
+        "User logged out successfully"
+    );
+
+
+    // Redirect
 
     window.location.href =
-        `edit-product.html?id=${id}`;
+        "login.html";
 
 }

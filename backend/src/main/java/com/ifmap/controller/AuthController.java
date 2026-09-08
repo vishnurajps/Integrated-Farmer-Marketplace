@@ -1,6 +1,5 @@
 package com.ifmap.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,29 +13,47 @@ import com.ifmap.service.UserService;
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    // ==========================
-    // Register API
-    // ==========================
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {
 
-        String response = userService.registerUser(request);
+    public AuthController(UserService userService) {
 
-        return ResponseEntity.ok(response);
+        this.userService = userService;
+
     }
 
-    // ==========================
-    // Login API
-    // ==========================
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
 
-        LoginResponse response = userService.loginUser(request);
+    // ==========================
+    // REGISTER API
+    // ==========================
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(
+            @RequestBody RegisterRequest request
+    ) {
+
+        String response =
+                userService.registerUser(request);
 
         return ResponseEntity.ok(response);
+
+    }
+
+
+    // ==========================
+    // LOGIN API
+    // ==========================
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(
+            @RequestBody LoginRequest request
+    ) {
+
+        LoginResponse response =
+                userService.loginUser(request);
+
+        return ResponseEntity.ok(response);
+
     }
 
 }
