@@ -155,5 +155,24 @@ public class ProductController {
         return ResponseEntity.noContent().build();
 
     }
+    
+ // ==========================================
+ // GET SINGLE PRODUCT BY ID
+ // BUYER PRODUCT DETAILS
+ // ==========================================
+
+ @GetMapping("/{productId}")
+ public ResponseEntity<Product> getProductById(
+         @PathVariable Long productId
+ ) {
+
+     return productService
+             .getProductById(productId)
+             .map(ResponseEntity::ok)
+             .orElse(
+                     ResponseEntity.notFound().build()
+             );
+
+ }
 
 }

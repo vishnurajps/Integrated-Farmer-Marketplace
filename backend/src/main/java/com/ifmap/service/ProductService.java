@@ -206,5 +206,16 @@ public class ProductService {
         productRepository.delete(product);
 
     }
+    
+ // ==========================================
+ // GET PRODUCT BY ID
+ // BUYER PRODUCT DETAILS
+ // ==========================================
+
+ public Optional<Product> getProductById(Long productId) {
+
+     return productRepository.findById(productId);
+
+ }
 
 }
