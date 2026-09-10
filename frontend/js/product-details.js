@@ -1,9 +1,12 @@
 // ==========================================
-// API URL
+// API URLs
 // ==========================================
 
 const PRODUCT_API_URL =
     "http://localhost:8080/api/products";
+
+const ORDER_API_URL =
+    "http://localhost:8080/api/orders";
 
 
 // ==========================================
@@ -15,9 +18,28 @@ const urlParams =
         window.location.search
     );
 
-
 const productId =
     urlParams.get("id");
+
+
+// ==========================================
+// LOGGED-IN USER
+// ==========================================
+
+const buyerId =
+    sessionStorage.getItem("userId") ||
+    localStorage.getItem("userId");
+
+const userRole =
+    sessionStorage.getItem("userRole") ||
+    localStorage.getItem("userRole");
+
+
+// ==========================================
+// GLOBAL PRODUCT
+// ==========================================
+
+let currentProduct = null;
 
 
 // ==========================================
@@ -28,7 +50,43 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-        // Check product ID
+        // ==========================
+        // CHECK LOGIN
+        // ==========================
+
+        if (!buyerId) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ==========================
+        // CHECK BUYER ROLE
+        // ==========================
+
+        if (userRole !== "BUYER") {
+
+            alert(
+                "Only buyers can place orders."
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ==========================
+        // CHECK PRODUCT ID
+        // ==========================
 
         if (!productId) {
 
@@ -41,9 +99,39 @@ document.addEventListener(
         }
 
 
-        // Load product
+        // ==========================
+        // LOAD PRODUCT
+        // ==========================
 
         loadProductDetails();
+
+
+        // ==========================
+        // QUANTITY BUTTON EVENTS
+        // ==========================
+
+        document
+            .getElementById("increaseQuantity")
+            .addEventListener(
+                "click",
+                increaseQuantity
+            );
+
+
+        document
+            .getElementById("decreaseQuantity")
+            .addEventListener(
+                "click",
+                decreaseQuantity
+            );
+
+
+        document
+            .getElementById("orderQuantity")
+            .addEventListener(
+                "change",
+                validateQuantity
+            );
 
     }
 );
@@ -99,6 +187,10 @@ async function loadProductDetails() {
             "Product Details:",
             product
         );
+
+
+        currentProduct =
+            product;
 
 
         displayProduct(product);
@@ -191,7 +283,8 @@ function displayProduct(product) {
     document
         .getElementById("productName")
         .textContent =
-            product.name || "Unnamed Product";
+            product.name ||
+            "Unnamed Product";
 
 
     // ==========================================
@@ -199,7 +292,8 @@ function displayProduct(product) {
     // ==========================================
 
     const status =
-        product.availability || "Unavailable";
+        product.availability ||
+        "Unavailable";
 
 
     const statusElement =
@@ -213,7 +307,8 @@ function displayProduct(product) {
 
 
     if (
-        status.toLowerCase() === "available"
+        status.toLowerCase() ===
+        "available"
     ) {
 
         statusElement.className =
@@ -257,6 +352,23 @@ function displayProduct(product) {
         .getElementById("productQuantity")
         .textContent =
             `${product.quantity ?? 0} ${product.unit || ""}`;
+
+
+    // ==========================================
+    // SET MAXIMUM ORDER QUANTITY
+    // ==========================================
+
+    const quantityInput =
+        document.getElementById(
+            "orderQuantity"
+        );
+
+
+    quantityInput.max =
+        product.quantity || 1;
+
+
+    quantityInput.value = 1;
 
 
     // ==========================================
@@ -316,7 +428,7 @@ function displayProduct(product) {
         .onclick =
             function () {
 
-                buyProduct(product);
+                buyProduct();
 
             };
 
@@ -333,6 +445,436 @@ function displayProduct(product) {
                 contactFarmer(product);
 
             };
+
+
+    // ==========================================
+    // DISABLE BUY BUTTON IF UNAVAILABLE
+    // ==========================================
+
+    if (
+        status.toLowerCase() !== "available" ||
+        !product.quantity ||
+        product.quantity <= 0
+    ) {
+
+        document
+            .getElementById("buyNowButton")
+            .disabled = true;
+
+    }
+
+}
+
+
+// ==========================================
+// INCREASE QUANTITY
+// ==========================================
+
+function increaseQuantity() {
+
+    if (!currentProduct) {
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "orderQuantity"
+        );
+
+
+    let quantity =
+        Number(input.value);
+
+
+    const availableQuantity =
+        Number(
+            currentProduct.quantity
+        );
+
+
+    if (
+        quantity < availableQuantity
+    ) {
+
+        input.value =
+            quantity + 1;
+
+    }
+
+    else {
+
+        alert(
+            `Only ${availableQuantity} ${currentProduct.unit} available.`
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// DECREASE QUANTITY
+// ==========================================
+
+function decreaseQuantity() {
+
+    const input =
+        document.getElementById(
+            "orderQuantity"
+        );
+
+
+    let quantity =
+        Number(input.value);
+
+
+    if (quantity > 1) {
+
+        input.value =
+            quantity - 1;
+
+    }
+
+}
+
+
+// ==========================================
+// VALIDATE QUANTITY
+// ==========================================
+
+function validateQuantity() {
+
+    if (!currentProduct) {
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "orderQuantity"
+        );
+
+
+    let quantity =
+        Number(input.value);
+
+
+    const maximum =
+        Number(
+            currentProduct.quantity
+        );
+
+
+    // Minimum quantity
+
+    if (
+        !quantity ||
+        quantity < 1
+    ) {
+
+        input.value = 1;
+
+        return;
+
+    }
+
+
+    // Maximum quantity
+
+    if (
+        quantity > maximum
+    ) {
+
+        input.value =
+            maximum;
+
+
+        alert(
+            `Maximum available quantity is ${maximum} ${currentProduct.unit}`
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// BUY PRODUCT
+// ==========================================
+
+async function buyProduct() {
+
+    if (!currentProduct) {
+
+        alert(
+            "Product information is not loaded."
+        );
+
+        return;
+
+    }
+
+
+    const quantity =
+        Number(
+            document
+                .getElementById(
+                    "orderQuantity"
+                )
+                .value
+        );
+
+
+    // ==========================================
+    // VALIDATE QUANTITY
+    // ==========================================
+
+    if (
+        !quantity ||
+        quantity <= 0
+    ) {
+
+        alert(
+            "Please enter a valid quantity."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        quantity >
+        currentProduct.quantity
+    ) {
+
+        alert(
+            "Requested quantity is greater than available stock."
+        );
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // CONFIRM ORDER
+    // ==========================================
+
+    const totalPrice =
+        currentProduct.price *
+        quantity;
+
+
+    const confirmOrder =
+        confirm(
+
+            `Confirm your order?\n\n` +
+
+            `Product: ${currentProduct.name}\n` +
+
+            `Quantity: ${quantity} ${currentProduct.unit}\n` +
+
+            `Price per unit: ₹${currentProduct.price}\n` +
+
+            `Total Price: ₹${totalPrice}`
+
+        );
+
+
+    if (!confirmOrder) {
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // ORDER DATA
+    // ==========================================
+
+    const orderData = {
+
+        productId:
+            Number(currentProduct.id),
+
+        buyerId:
+            Number(buyerId),
+
+        quantity:
+            quantity
+
+    };
+
+
+    console.log(
+        "Sending Order:",
+        orderData
+    );
+
+
+    const buyButton =
+        document.getElementById(
+            "buyNowButton"
+        );
+
+
+    try {
+
+        // Disable button
+
+        buyButton.disabled = true;
+
+        buyButton.innerHTML =
+            `<span class="spinner-border spinner-border-sm"></span>
+             Processing...`;
+
+
+        // ==========================================
+        // CALL ORDER API
+        // ==========================================
+
+        const response =
+            await fetch(
+                ORDER_API_URL,
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            orderData
+                        )
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "Order Response:",
+            result
+        );
+
+
+        // ==========================================
+        // ERROR
+        // ==========================================
+
+        if (!response.ok) {
+
+            alert(
+
+                result.message ||
+
+                result.error ||
+
+                "Unable to place order."
+
+            );
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // SUCCESS
+        // ==========================================
+
+        alert(
+
+            "🎉 Order placed successfully!\n\n" +
+
+            `Order ID: ${result.id}\n` +
+
+            `Total Amount: ₹${result.totalPrice}`
+
+        );
+
+
+        // Redirect to buyer orders
+
+        window.location.href =
+            "buyer-orders.html";
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Order Error:",
+            error
+        );
+
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    }
+
+    finally {
+
+        buyButton.disabled = false;
+
+        buyButton.innerHTML = `
+
+            <i class="bi bi-cart-fill"></i>
+
+            Buy Now
+
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// CONTACT FARMER
+// ==========================================
+
+function contactFarmer(product) {
+
+    if (
+        product.farmer &&
+        product.farmer.mobile
+    ) {
+
+        alert(
+
+            "Farmer Mobile Number: " +
+
+            product.farmer.mobile
+
+        );
+
+    }
+
+    else {
+
+        alert(
+            "Farmer contact information is not available."
+        );
+
+    }
 
 }
 
@@ -371,52 +913,6 @@ function formatDate(dateValue) {
 
 
 // ==========================================
-// BUY PRODUCT
-// ==========================================
-
-function buyProduct(product) {
-
-    // Next step:
-    // Order system will be connected here
-
-    alert(
-        "Order functionality will be added next.\n\n" +
-        "Product: " + product.name
-    );
-
-}
-
-
-// ==========================================
-// CONTACT FARMER
-// ==========================================
-
-function contactFarmer(product) {
-
-    if (
-        product.farmer &&
-        product.farmer.mobile
-    ) {
-
-        alert(
-            "Farmer Mobile Number: " +
-            product.farmer.mobile
-        );
-
-    }
-
-    else {
-
-        alert(
-            "Farmer contact information is not available."
-        );
-
-    }
-
-}
-
-
-// ==========================================
 // BACK
 // ==========================================
 
@@ -433,8 +929,6 @@ function goBack() {
 // ==========================================
 
 function showError(message) {
-
-    // Hide loading
 
     document
         .getElementById("loadingContainer")
@@ -464,21 +958,15 @@ function showError(message) {
 
             </h5>
 
-
             <p>
-
                 ${message}
-
             </p>
-
 
             <a
                 href="buyer-marketplace.html"
                 class="btn btn-secondary"
             >
-
                 Back to Marketplace
-
             </a>
 
         </div>

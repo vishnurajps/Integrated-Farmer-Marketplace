@@ -5,28 +5,36 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Browse Products | IFMAP</title>
 
-    <!-- Bootstrap -->
+
+    <!-- Bootstrap CSS -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+        rel="stylesheet"
+    >
+
 
     <!-- Bootstrap Icons -->
 
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
 
     <!-- Dashboard CSS -->
 
     <link
         rel="stylesheet"
-        href="../css/dashboard.css">
+        href="../css/dashboard.css"
+    >
 
 </head>
 
@@ -47,7 +55,8 @@
 
         <a
             class="navbar-brand text-white fw-bold"
-            href="../index.html">
+            href="buyer-dashboard.html"
+        >
 
             🌾 IFMAP
 
@@ -63,13 +72,17 @@
 
             <a
                 href="cart.html"
-                class="btn btn-light me-3">
+                class="btn btn-light me-3 position-relative"
+            >
 
                 <i class="bi bi-cart3"></i>
 
+                Cart
+
                 <span
-                    class="badge bg-success"
-                    id="cartBadge">
+                    class="badge bg-success ms-1"
+                    id="cartBadge"
+                >
 
                     0
 
@@ -78,27 +91,30 @@
             </a>
 
 
-            <!-- PROFILE -->
-
-            <a href="buyer-profile.html">
-
-                <img
-                    src="../images/profile.png"
-                    class="profile-img"
-                    alt="Profile">
-
-            </a>
-
-
             <!-- USER NAME -->
 
             <span
-                class="text-white ms-2"
-                id="userName">
+                class="text-white me-3"
+                id="userName"
+            >
 
                 Buyer
 
             </span>
+
+
+            <!-- LOGOUT -->
+
+            <button
+                class="btn btn-light"
+                id="logoutButton"
+            >
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                Logout
+
+            </button>
 
 
         </div>
@@ -110,7 +126,7 @@
 
 
 <!-- ================================= -->
-<!-- DASHBOARD -->
+<!-- MAIN DASHBOARD LAYOUT -->
 <!-- ================================= -->
 
 <div class="dashboard">
@@ -125,6 +141,8 @@
         <ul>
 
 
+            <!-- DASHBOARD -->
+
             <li>
 
                 <a href="buyer-dashboard.html">
@@ -137,6 +155,9 @@
 
             </li>
 
+
+
+            <!-- BROWSE PRODUCTS -->
 
             <li class="active">
 
@@ -151,6 +172,9 @@
             </li>
 
 
+
+            <!-- MY ORDERS -->
+
             <li>
 
                 <a href="buyer-orders.html">
@@ -163,6 +187,9 @@
 
             </li>
 
+
+
+            <!-- MY CART -->
 
             <li>
 
@@ -177,6 +204,9 @@
             </li>
 
 
+
+            <!-- NOTIFICATIONS -->
+
             <li>
 
                 <a href="buyer-notifications.html">
@@ -189,6 +219,9 @@
 
             </li>
 
+
+
+            <!-- PROFILE -->
 
             <li>
 
@@ -203,11 +236,15 @@
             </li>
 
 
+
+            <!-- LOGOUT -->
+
             <li>
 
                 <a
                     href="#"
-                    id="logoutButton">
+                    id="sidebarLogoutButton"
+                >
 
                     <i class="bi bi-box-arrow-right"></i>
 
@@ -231,22 +268,26 @@
     <main class="content">
 
 
-        <!-- PAGE TITLE -->
+        <!-- ================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================= -->
 
-        <div
-            class="d-flex justify-content-between align-items-center mb-4">
+        <div class="mb-4">
 
-            <div>
 
-                <h2>🌾 Browse Fresh Products</h2>
+            <h2>
 
-                <p class="text-muted">
+                🌾 Browse Fresh Products
 
-                    Buy fresh agricultural products directly from farmers.
+            </h2>
 
-                </p>
 
-            </div>
+            <p class="text-muted">
+
+                Buy fresh agricultural products directly from farmers.
+
+            </p>
+
 
         </div>
 
@@ -267,19 +308,21 @@
                     type="text"
                     id="searchProduct"
                     class="form-control"
-                    placeholder="🔍 Search products...">
+                    placeholder="🔍 Search products..."
+                >
 
             </div>
 
 
 
-            <!-- CATEGORY FILTER -->
+            <!-- CATEGORY -->
 
             <div class="col-md-3 mb-2">
 
                 <select
                     id="categoryFilter"
-                    class="form-select">
+                    class="form-select"
+                >
 
                     <option value="All">
 
@@ -287,11 +330,13 @@
 
                     </option>
 
+
                     <option value="Vegetable">
 
                         Vegetable
 
                     </option>
+
 
                     <option value="Fruit">
 
@@ -299,11 +344,13 @@
 
                     </option>
 
+
                     <option value="Grains">
 
                         Grains
 
                     </option>
+
 
                     <option value="Pulses">
 
@@ -311,11 +358,13 @@
 
                     </option>
 
+
                     <option value="Flowers">
 
                         Flowers
 
                     </option>
+
 
                     <option value="Spices">
 
@@ -329,13 +378,14 @@
 
 
 
-            <!-- CLEAR -->
+            <!-- CLEAR FILTER -->
 
             <div class="col-md-3 mb-2">
 
                 <button
                     id="clearFilters"
-                    class="btn btn-outline-secondary w-100">
+                    class="btn btn-outline-secondary w-100"
+                >
 
                     <i class="bi bi-x-circle"></i>
 
@@ -356,7 +406,11 @@
 
         <p class="text-muted">
 
-            <span id="resultCount">0</span>
+            <span id="resultCount">
+
+                0
+
+            </span>
 
             products found
 
@@ -370,18 +424,27 @@
 
         <div
             class="row"
-            id="productContainer">
+            id="productContainer"
+        >
 
 
-            <!-- Loading -->
+            <!-- LOADING -->
 
-            <div class="col-12 text-center">
+            <div class="col-12 text-center py-5">
 
-                <p class="text-muted">
+
+                <div
+                    class="spinner-border text-success"
+                    role="status"
+                ></div>
+
+
+                <p class="text-muted mt-3">
 
                     Loading products...
 
                 </p>
+
 
             </div>
 
@@ -390,6 +453,7 @@
 
 
     </main>
+
 
 </div>
 

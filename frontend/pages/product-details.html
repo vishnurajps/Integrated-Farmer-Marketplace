@@ -355,51 +355,112 @@
 
                         <!-- ACTIONS -->
 
-                        <div class="mt-4">
+                        <!-- ========================= -->
+<!-- ORDER QUANTITY -->
+<!-- ========================= -->
+
+<div class="mt-4 mb-3">
+
+    <label
+        for="orderQuantity"
+        class="form-label fw-bold"
+    >
+
+        Order Quantity
+
+    </label>
 
 
-                            <button
-                                class="btn btn-success"
-                                id="buyNowButton"
-                            >
+    <div class="input-group" style="max-width: 250px;">
 
-                                <i class="bi bi-cart-fill"></i>
+        <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="decreaseQuantity"
+        >
 
-                                Buy Now
+            -
 
-                            </button>
-
-
-
-                            <button
-                                class="
-                                    btn
-                                    btn-outline-primary
-                                "
-                                id="contactFarmerButton"
-                            >
-
-                                <i class="bi bi-person-lines-fill"></i>
-
-                                Contact Farmer
-
-                            </button>
+        </button>
 
 
-
-                            <a
-                                href="buyer-marketplace.html"
-                                class="btn btn-secondary"
-                            >
-
-                                <i class="bi bi-arrow-left"></i>
-
-                                Marketplace
-
-                            </a>
+        <input
+            type="number"
+            id="orderQuantity"
+            class="form-control text-center"
+            min="1"
+            value="1"
+        >
 
 
-                        </div>
+        <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="increaseQuantity"
+        >
+
+            +
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ACTIONS -->
+<!-- ========================= -->
+
+<div class="mt-4">
+
+
+    <!-- BUY NOW -->
+
+    <button
+        class="btn btn-success"
+        id="buyNowButton"
+    >
+
+        <i class="bi bi-cart-fill"></i>
+
+        Buy Now
+
+    </button>
+
+
+
+    <!-- CONTACT FARMER -->
+
+    <button
+        class="btn btn-outline-primary"
+        id="contactFarmerButton"
+    >
+
+        <i class="bi bi-person-lines-fill"></i>
+
+        Contact Farmer
+
+    </button>
+
+
+
+    <!-- BACK TO MARKETPLACE -->
+
+    <a
+        href="buyer-marketplace.html"
+        class="btn btn-secondary"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Marketplace
+
+    </a>
+
+
+</div>
 
 
                     </div>
