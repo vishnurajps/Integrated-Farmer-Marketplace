@@ -12,40 +12,31 @@ import java.util.List;
 public interface OrderRepository
         extends JpaRepository<Order, Long> {
 
-
-    // ==========================================
     // GET ALL ORDERS OF A BUYER
-    // ==========================================
 
-    List<Order> findByBuyerId(
+    List<Order> findByBuyerIdOrderByOrderDateDesc(
             Long buyerId
     );
 
 
-    // ==========================================
     // GET ALL ORDERS RECEIVED BY A FARMER
-    // ==========================================
 
-    List<Order> findByFarmerId(
+    List<Order> findByFarmerIdOrderByOrderDateDesc(
             Long farmerId
     );
 
 
-    // ==========================================
-    // GET ORDERS OF A FARMER BY STATUS
-    // ==========================================
+    // GET FARMER ORDERS BY STATUS
 
-    List<Order> findByFarmerIdAndStatus(
+    List<Order> findByFarmerIdAndStatusOrderByOrderDateDesc(
             Long farmerId,
             OrderStatus status
     );
 
 
-    // ==========================================
-    // GET ORDERS OF A BUYER BY STATUS
-    // ==========================================
+    // GET BUYER ORDERS BY STATUS
 
-    List<Order> findByBuyerIdAndStatus(
+    List<Order> findByBuyerIdAndStatusOrderByOrderDateDesc(
             Long buyerId,
             OrderStatus status
     );

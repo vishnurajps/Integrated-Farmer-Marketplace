@@ -2,24 +2,17 @@
 // API URLs
 // ==========================================
 
-const PRODUCT_API_URL =
-    "http://localhost:8080/api/products";
-
-const ORDER_API_URL =
-    "http://localhost:8080/api/orders";
+const PRODUCT_API_URL = "http://localhost:8080/api/products";
+const ORDER_API_URL = "http://localhost:8080/api/orders";
 
 
 // ==========================================
 // GET PRODUCT ID FROM URL
 // ==========================================
 
-const urlParams =
-    new URLSearchParams(
-        window.location.search
-    );
+const urlParams = new URLSearchParams(window.location.search);
 
-const productId =
-    urlParams.get("id");
+const productId = urlParams.get("id");
 
 
 // ==========================================
@@ -46,95 +39,131 @@ let currentProduct = null;
 // PAGE LOAD
 // ==========================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        // ==========================
-        // CHECK LOGIN
-        // ==========================
+    // ==========================================
+    // CHECK LOGIN
+    // ==========================================
 
-        if (!buyerId) {
+    if (!buyerId) {
 
-            alert("Please login first.");
+        alert("Please login first.");
 
-            window.location.href =
-                "login.html";
+        window.location.href = "../index.html";
 
-            return;
-
-        }
-
-
-        // ==========================
-        // CHECK BUYER ROLE
-        // ==========================
-
-        if (userRole !== "BUYER") {
-
-            alert(
-                "Only buyers can place orders."
-            );
-
-            window.location.href =
-                "login.html";
-
-            return;
-
-        }
-
-
-        // ==========================
-        // CHECK PRODUCT ID
-        // ==========================
-
-        if (!productId) {
-
-            showError(
-                "Product ID was not provided."
-            );
-
-            return;
-
-        }
-
-
-        // ==========================
-        // LOAD PRODUCT
-        // ==========================
-
-        loadProductDetails();
-
-
-        // ==========================
-        // QUANTITY BUTTON EVENTS
-        // ==========================
-
-        document
-            .getElementById("increaseQuantity")
-            .addEventListener(
-                "click",
-                increaseQuantity
-            );
-
-
-        document
-            .getElementById("decreaseQuantity")
-            .addEventListener(
-                "click",
-                decreaseQuantity
-            );
-
-
-        document
-            .getElementById("orderQuantity")
-            .addEventListener(
-                "change",
-                validateQuantity
-            );
+        return;
 
     }
-);
+
+
+    // ==========================================
+    // CHECK USER ROLE
+    // ==========================================
+
+    if (userRole !== "BUYER") {
+
+        alert("Only buyers can access this page.");
+
+        window.location.href = "../index.html";
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // CHECK PRODUCT ID
+    // ==========================================
+
+    if (!productId) {
+
+        showError("Product ID was not provided.");
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // LOAD PRODUCT DETAILS
+    // ==========================================
+
+    loadProductDetails();
+
+
+    // ==========================================
+    // QUANTITY BUTTON EVENTS
+    // ==========================================
+
+    const increaseButton =
+        document.getElementById("increaseQuantity");
+
+    const decreaseButton =
+        document.getElementById("decreaseQuantity");
+
+    const quantityInput =
+        document.getElementById("orderQuantity");
+
+
+    if (increaseButton) {
+
+        increaseButton.addEventListener(
+            "click",
+            increaseQuantity
+        );
+
+    }
+
+
+    if (decreaseButton) {
+
+        decreaseButton.addEventListener(
+            "click",
+            decreaseQuantity
+        );
+
+    }
+
+
+    if (quantityInput) {
+
+        quantityInput.addEventListener(
+            "change",
+            validateQuantity
+        );
+
+        quantityInput.addEventListener(
+            "input",
+            validateQuantity
+        );
+
+    }
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+
+    if (logoutButton) {
+
+        logoutButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                logoutUser();
+
+            }
+        );
+
+    }
+
+});
 
 
 // ==========================================
@@ -151,29 +180,32 @@ async function loadProductDetails() {
         );
 
 
-        const response =
-            await fetch(
-                `${PRODUCT_API_URL}/${productId}`
-            );
+        const response = await fetch(
+            `${PRODUCT_API_URL}/${productId}`
+        );
 
 
-        // Product not found
+        // ==========================================
+        // PRODUCT NOT FOUND
+        // ==========================================
 
         if (response.status === 404) {
 
-            showError(
-                "Product not found."
-            );
+            showError("Product not found.");
 
             return;
 
         }
 
 
+        // ==========================================
+        // OTHER ERROR
+        // ==========================================
+
         if (!response.ok) {
 
             throw new Error(
-                "Failed to load product."
+                "Failed to load product details."
             );
 
         }
@@ -189,8 +221,7 @@ async function loadProductDetails() {
         );
 
 
-        currentProduct =
-            product;
+        currentProduct = product;
 
 
         displayProduct(product);
@@ -207,7 +238,7 @@ async function loadProductDetails() {
 
         showError(
             "Unable to load product details. " +
-            "Make sure Spring Boot is running."
+            "Make sure the Spring Boot server is running."
         );
 
     }
@@ -221,14 +252,18 @@ async function loadProductDetails() {
 
 function displayProduct(product) {
 
-    // Hide loading
+    // ==========================================
+    // HIDE LOADING
+    // ==========================================
 
     document
         .getElementById("loadingContainer")
         .classList.add("d-none");
 
 
-    // Show product
+    // ==========================================
+    // SHOW PRODUCT
+    // ==========================================
 
     document
         .getElementById("productDetails")
@@ -240,9 +275,7 @@ function displayProduct(product) {
     // ==========================================
 
     const productImage =
-        document.getElementById(
-            "productImage"
-        );
+        document.getElementById("productImage");
 
 
     if (
@@ -250,8 +283,7 @@ function displayProduct(product) {
         product.imageUrl.trim() !== ""
     ) {
 
-        productImage.src =
-            product.imageUrl;
+        productImage.src = product.imageUrl;
 
     }
 
@@ -265,15 +297,14 @@ function displayProduct(product) {
 
     // Image fallback
 
-    productImage.onerror =
-        function () {
+    productImage.onerror = function () {
 
-            this.onerror = null;
+        this.onerror = null;
 
-            this.src =
-                "../images/no-image.png";
+        this.src =
+            "../images/no-image.png";
 
-        };
+    };
 
 
     // ==========================================
@@ -288,7 +319,7 @@ function displayProduct(product) {
 
 
     // ==========================================
-    // STATUS
+    // PRODUCT STATUS
     // ==========================================
 
     const status =
@@ -297,18 +328,14 @@ function displayProduct(product) {
 
 
     const statusElement =
-        document.getElementById(
-            "productStatus"
-        );
+        document.getElementById("productStatus");
 
 
-    statusElement.textContent =
-        status;
+    statusElement.textContent = status;
 
 
     if (
-        status.toLowerCase() ===
-        "available"
+        status.toLowerCase() === "available"
     ) {
 
         statusElement.className =
@@ -325,7 +352,7 @@ function displayProduct(product) {
 
 
     // ==========================================
-    // PRICE
+    // PRODUCT PRICE
     // ==========================================
 
     document
@@ -345,7 +372,7 @@ function displayProduct(product) {
 
 
     // ==========================================
-    // QUANTITY
+    // AVAILABLE QUANTITY
     // ==========================================
 
     document
@@ -359,16 +386,29 @@ function displayProduct(product) {
     // ==========================================
 
     const quantityInput =
-        document.getElementById(
-            "orderQuantity"
-        );
+        document.getElementById("orderQuantity");
 
 
-    quantityInput.max =
-        product.quantity || 1;
+    const availableQuantity =
+        Number(product.quantity) || 0;
 
 
-    quantityInput.value = 1;
+    quantityInput.max = availableQuantity;
+
+
+    if (availableQuantity > 0) {
+
+        quantityInput.value = 1;
+
+    }
+
+    else {
+
+        quantityInput.value = 0;
+
+        quantityInput.disabled = true;
+
+    }
 
 
     // ==========================================
@@ -378,9 +418,7 @@ function displayProduct(product) {
     document
         .getElementById("productHarvestDate")
         .textContent =
-            formatDate(
-                product.harvestDate
-            );
+            formatDate(product.harvestDate);
 
 
     // ==========================================
@@ -400,6 +438,7 @@ function displayProduct(product) {
     document
         .getElementById("farmerName")
         .textContent =
+
             product.farmer &&
             product.farmer.fullName
 
@@ -423,14 +462,11 @@ function displayProduct(product) {
     // BUY NOW BUTTON
     // ==========================================
 
-    document
-        .getElementById("buyNowButton")
-        .onclick =
-            function () {
+    const buyButton =
+        document.getElementById("buyNowButton");
 
-                buyProduct();
 
-            };
+    buyButton.onclick = buyProduct;
 
 
     // ==========================================
@@ -439,27 +475,26 @@ function displayProduct(product) {
 
     document
         .getElementById("contactFarmerButton")
-        .onclick =
-            function () {
+        .onclick = function () {
 
-                contactFarmer(product);
+            contactFarmer(product);
 
-            };
+        };
 
 
     // ==========================================
-    // DISABLE BUY BUTTON IF UNAVAILABLE
+    // DISABLE BUY BUTTON
     // ==========================================
 
     if (
         status.toLowerCase() !== "available" ||
-        !product.quantity ||
-        product.quantity <= 0
+        availableQuantity <= 0
     ) {
 
-        document
-            .getElementById("buyNowButton")
-            .disabled = true;
+        buyButton.disabled = true;
+
+        buyButton.innerHTML =
+            '<i class="bi bi-x-circle"></i> Unavailable';
 
     }
 
@@ -480,9 +515,7 @@ function increaseQuantity() {
 
 
     const input =
-        document.getElementById(
-            "orderQuantity"
-        );
+        document.getElementById("orderQuantity");
 
 
     let quantity =
@@ -490,17 +523,12 @@ function increaseQuantity() {
 
 
     const availableQuantity =
-        Number(
-            currentProduct.quantity
-        );
+        Number(currentProduct.quantity);
 
 
-    if (
-        quantity < availableQuantity
-    ) {
+    if (quantity < availableQuantity) {
 
-        input.value =
-            quantity + 1;
+        input.value = quantity + 1;
 
     }
 
@@ -522,9 +550,7 @@ function increaseQuantity() {
 function decreaseQuantity() {
 
     const input =
-        document.getElementById(
-            "orderQuantity"
-        );
+        document.getElementById("orderQuantity");
 
 
     let quantity =
@@ -533,8 +559,7 @@ function decreaseQuantity() {
 
     if (quantity > 1) {
 
-        input.value =
-            quantity - 1;
+        input.value = quantity - 1;
 
     }
 
@@ -555,9 +580,7 @@ function validateQuantity() {
 
 
     const input =
-        document.getElementById(
-            "orderQuantity"
-        );
+        document.getElementById("orderQuantity");
 
 
     let quantity =
@@ -565,12 +588,12 @@ function validateQuantity() {
 
 
     const maximum =
-        Number(
-            currentProduct.quantity
-        );
+        Number(currentProduct.quantity);
 
 
-    // Minimum quantity
+    // ==========================================
+    // MINIMUM QUANTITY
+    // ==========================================
 
     if (
         !quantity ||
@@ -584,18 +607,17 @@ function validateQuantity() {
     }
 
 
-    // Maximum quantity
+    // ==========================================
+    // MAXIMUM QUANTITY
+    // ==========================================
 
-    if (
-        quantity > maximum
-    ) {
+    if (quantity > maximum) {
 
-        input.value =
-            maximum;
+        input.value = maximum;
 
 
         alert(
-            `Maximum available quantity is ${maximum} ${currentProduct.unit}`
+            `Maximum available quantity is ${maximum} ${currentProduct.unit}.`
         );
 
     }
@@ -609,6 +631,10 @@ function validateQuantity() {
 
 async function buyProduct() {
 
+    // ==========================================
+    // CHECK PRODUCT
+    // ==========================================
+
     if (!currentProduct) {
 
         alert(
@@ -620,12 +646,14 @@ async function buyProduct() {
     }
 
 
+    // ==========================================
+    // GET QUANTITY
+    // ==========================================
+
     const quantity =
         Number(
             document
-                .getElementById(
-                    "orderQuantity"
-                )
+                .getElementById("orderQuantity")
                 .value
         );
 
@@ -650,7 +678,7 @@ async function buyProduct() {
 
     if (
         quantity >
-        currentProduct.quantity
+        Number(currentProduct.quantity)
     ) {
 
         alert(
@@ -663,28 +691,31 @@ async function buyProduct() {
 
 
     // ==========================================
-    // CONFIRM ORDER
+    // CALCULATE TOTAL
     // ==========================================
 
     const totalPrice =
-        currentProduct.price *
+        Number(currentProduct.price) *
         quantity;
 
 
-    const confirmOrder =
-        confirm(
+    // ==========================================
+    // CONFIRM ORDER
+    // ==========================================
 
-            `Confirm your order?\n\n` +
+    const confirmOrder = confirm(
 
-            `Product: ${currentProduct.name}\n` +
+        `Confirm your order?\n\n` +
 
-            `Quantity: ${quantity} ${currentProduct.unit}\n` +
+        `Product: ${currentProduct.name}\n` +
 
-            `Price per unit: ₹${currentProduct.price}\n` +
+        `Quantity: ${quantity} ${currentProduct.unit}\n` +
 
-            `Total Price: ₹${totalPrice}`
+        `Price per unit: ₹${currentProduct.price}\n` +
 
-        );
+        `Total Price: ₹${totalPrice}`
+
+    );
 
 
     if (!confirmOrder) {
@@ -719,51 +750,76 @@ async function buyProduct() {
 
 
     const buyButton =
-        document.getElementById(
-            "buyNowButton"
-        );
+        document.getElementById("buyNowButton");
 
 
     try {
 
-        // Disable button
+        // ==========================================
+        // DISABLE BUTTON
+        // ==========================================
 
         buyButton.disabled = true;
 
+
         buyButton.innerHTML =
-            `<span class="spinner-border spinner-border-sm"></span>
-             Processing...`;
+            `
+            <span
+                class="spinner-border spinner-border-sm"
+            ></span>
+            Processing...
+            `;
 
 
         // ==========================================
         // CALL ORDER API
         // ==========================================
 
-        const response =
-            await fetch(
-                ORDER_API_URL,
-                {
+        const response = await fetch(
 
-                    method: "POST",
+            ORDER_API_URL,
 
-                    headers: {
+            {
 
-                        "Content-Type":
-                            "application/json"
+                method: "POST",
 
-                    },
+                headers: {
 
-                    body:
-                        JSON.stringify(
-                            orderData
-                        )
+                    "Content-Type":
+                        "application/json"
 
-                }
+                },
+
+                body:
+                    JSON.stringify(orderData)
+
+            }
+
+        );
+
+
+        // ==========================================
+        // READ RESPONSE SAFELY
+        // ==========================================
+
+        let result = null;
+
+
+        try {
+
+            result =
+                await response.json();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Unable to parse response:",
+                error
             );
 
-
-        const result =
-            await response.json();
+        }
 
 
         console.log(
@@ -773,18 +829,18 @@ async function buyProduct() {
 
 
         // ==========================================
-        // ERROR
+        // ERROR RESPONSE
         // ==========================================
 
         if (!response.ok) {
 
             alert(
 
-                result.message ||
+                result?.message ||
 
-                result.error ||
+                result?.error ||
 
-                "Unable to place order."
+                "Unable to place the order."
 
             );
 
@@ -801,18 +857,19 @@ async function buyProduct() {
 
             "🎉 Order placed successfully!\n\n" +
 
-            `Order ID: ${result.id}\n` +
+            `Order ID: ${result?.id || "Created"}\n` +
 
-            `Total Amount: ₹${result.totalPrice}`
+            `Total Amount: ₹${result?.totalPrice ?? totalPrice}`
 
         );
 
 
-        // Redirect to buyer orders
+        // ==========================================
+        // REDIRECT TO MY ORDERS
+        // ==========================================
 
         window.location.href =
             "buyer-orders.html";
-
 
     }
 
@@ -825,22 +882,28 @@ async function buyProduct() {
 
 
         alert(
-            "Unable to connect to the server."
+            "Unable to connect to the server. " +
+            "Make sure Spring Boot is running."
         );
 
     }
 
     finally {
 
-        buyButton.disabled = false;
+        // Restore button only if still on page
 
-        buyButton.innerHTML = `
+        if (
+            document.body.contains(buyButton) &&
+            !buyButton.disabled
+        ) {
 
-            <i class="bi bi-cart-fill"></i>
+            buyButton.innerHTML =
+                `
+                <i class="bi bi-cart-fill"></i>
+                Buy Now
+                `;
 
-            Buy Now
-
-        `;
+        }
 
     }
 
@@ -859,11 +922,8 @@ function contactFarmer(product) {
     ) {
 
         alert(
-
             "Farmer Mobile Number: " +
-
             product.farmer.mobile
-
         );
 
     }
@@ -896,8 +956,19 @@ function formatDate(dateValue) {
         new Date(dateValue);
 
 
+    // Invalid date
+
+    if (isNaN(date.getTime())) {
+
+        return "Not specified";
+
+    }
+
+
     return date.toLocaleDateString(
+
         "en-IN",
+
         {
 
             day: "numeric",
@@ -907,19 +978,28 @@ function formatDate(dateValue) {
             year: "numeric"
 
         }
+
     );
 
 }
 
 
 // ==========================================
-// BACK
+// LOGOUT
 // ==========================================
 
-function goBack() {
+function logoutUser() {
+
+    sessionStorage.clear();
+
+
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+
 
     window.location.href =
-        "buyer-marketplace.html";
+        "../index.html";
 
 }
 
@@ -930,20 +1010,22 @@ function goBack() {
 
 function showError(message) {
 
-    document
-        .getElementById("loadingContainer")
-        .classList.add("d-none");
+    const loadingContainer =
+        document.getElementById("loadingContainer");
+
+
+    if (loadingContainer) {
+
+        loadingContainer.classList.add("d-none");
+
+    }
 
 
     const errorContainer =
-        document.getElementById(
-            "errorContainer"
-        );
+        document.getElementById("errorContainer");
 
 
-    errorContainer.classList.remove(
-        "d-none"
-    );
+    errorContainer.classList.remove("d-none");
 
 
     errorContainer.innerHTML = `
@@ -958,15 +1040,18 @@ function showError(message) {
 
             </h5>
 
-            <p>
-                ${message}
-            </p>
+            <p>${message}</p>
+
 
             <a
-                href="buyer-marketplace.html"
+                href="browse-products.html"
                 class="btn btn-secondary"
             >
-                Back to Marketplace
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Browse Products
+
             </a>
 
         </div>

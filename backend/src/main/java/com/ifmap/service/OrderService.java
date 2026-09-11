@@ -6,6 +6,7 @@ import com.ifmap.entity.OrderStatus;
 import com.ifmap.entity.Product;
 import com.ifmap.entity.User;
 import com.ifmap.entity.UserRole;
+
 import com.ifmap.repository.OrderRepository;
 import com.ifmap.repository.ProductRepository;
 import com.ifmap.repository.UserRepository;
@@ -15,13 +16,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
-
     private final ProductRepository productRepository;
-
     private final UserRepository userRepository;
 
 
@@ -39,14 +39,9 @@ public class OrderService {
 
     ) {
 
-        this.orderRepository =
-                orderRepository;
-
-        this.productRepository =
-                productRepository;
-
-        this.userRepository =
-                userRepository;
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
 
     }
 
@@ -59,9 +54,7 @@ public class OrderService {
             CreateOrderRequest request
     ) {
 
-        // ======================================
-        // VALIDATE REQUEST
-        // ======================================
+        // Validate Product ID
 
         if (request.getProductId() == null) {
 
@@ -72,6 +65,8 @@ public class OrderService {
         }
 
 
+        // Validate Buyer ID
+
         if (request.getBuyerId() == null) {
 
             throw new RuntimeException(
@@ -80,6 +75,8 @@ public class OrderService {
 
         }
 
+
+        // Validate Quantity
 
         if (request.getQuantity() == null ||
                 request.getQuantity() <= 0) {
@@ -96,9 +93,7 @@ public class OrderService {
         // ======================================
 
         User buyer = userRepository
-                .findById(
-                        request.getBuyerId()
-                )
+                .findById(request.getBuyerId())
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Buyer not found"
@@ -106,9 +101,7 @@ public class OrderService {
                 );
 
 
-        // ======================================
-        // VERIFY USER ROLE
-        // ======================================
+        // Verify Buyer Role
 
         if (buyer.getRole() != UserRole.BUYER) {
 
@@ -124,9 +117,7 @@ public class OrderService {
         // ======================================
 
         Product product = productRepository
-                .findById(
-                        request.getProductId()
-                )
+                .findById(request.getProductId())
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Product not found"
@@ -135,11 +126,10 @@ public class OrderService {
 
 
         // ======================================
-        // CHECK PRODUCT AVAILABILITY
+        // CHECK AVAILABILITY
         // ======================================
 
         if (product.getAvailability() == null ||
-
                 !product.getAvailability()
                         .equalsIgnoreCase("Available")) {
 
@@ -151,7 +141,7 @@ public class OrderService {
 
 
         // ======================================
-        // CHECK PRODUCT QUANTITY
+        // CHECK STOCK
         // ======================================
 
         if (product.getQuantity() == null ||
@@ -164,12 +154,9 @@ public class OrderService {
         }
 
 
-        // ======================================
-        // CHECK ORDER QUANTITY
-        // ======================================
+        // Check requested quantity
 
-        if (request.getQuantity() >
-                product.getQuantity()) {
+        if (request.getQuantity() > product.getQuantity()) {
 
             throw new RuntimeException(
                     "Requested quantity is greater than available stock"
@@ -179,11 +166,10 @@ public class OrderService {
 
 
         // ======================================
-        // GET FARMER FROM PRODUCT
+        // GET FARMER
         // ======================================
 
-        User farmer =
-                product.getFarmer();
+        User farmer = product.getFarmer();
 
 
         if (farmer == null) {
@@ -224,11 +210,8 @@ public class OrderService {
 
         Order order = new Order();
 
-
         order.setProduct(product);
-
         order.setBuyer(buyer);
-
         order.setFarmer(farmer);
 
         order.setQuantity(
@@ -252,9 +235,7 @@ public class OrderService {
         );
 
 
-        // ======================================
-        // SAVE ORDER
-        // ======================================
+        // Save Order
 
         return orderRepository.save(order);
 
@@ -270,7 +251,9 @@ public class OrderService {
     ) {
 
         return orderRepository
-                .findByBuyerId(buyerId);
+                .findByBuyerIdOrderByOrderDateDesc(
+                        buyerId
+                );
 
     }
 
@@ -284,8 +267,129 @@ public class OrderService {
     ) {
 
         return orderRepository
-                .findByFarmerId(farmerId);
+                .findByFarmerIdOrderByOrderDateDesc(
+                        farmerId
+                );
 
     }
 
-} 
+
+    // ==========================================
+    // FARMER ACCEPT / REJECT ORDER
+    // ==========================================
+
+    public Order updateOrderStatus(
+
+            Long orderId,
+
+            Long farmerId,
+
+            OrderStatus newStatus
+
+    ) {
+
+        // ======================================
+        // VALIDATE STATUS
+        // ======================================
+
+        if (newStatus == null) {
+
+            throw new RuntimeException(
+                    "Order status is required"
+            );
+
+        }
+
+
+        // For now, farmer can only accept/reject
+
+        if (newStatus != OrderStatus.ACCEPTED &&
+                newStatus != OrderStatus.REJECTED) {
+
+            throw new RuntimeException(
+                    "Farmer can only ACCEPT or REJECT an order"
+            );
+
+        }
+
+
+        // ======================================
+        // FIND FARMER
+        // ======================================
+
+        User farmer = userRepository
+                .findById(farmerId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Farmer not found"
+                        )
+                );
+
+
+        // Verify farmer role
+
+        if (farmer.getRole() != UserRole.FARMER) {
+
+            throw new RuntimeException(
+                    "Only farmers can update orders"
+            );
+
+        }
+
+
+        // ======================================
+        // FIND ORDER
+        // ======================================
+
+        Order order = orderRepository
+                .findById(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Order not found"
+                        )
+                );
+
+
+        // ======================================
+        // SECURITY CHECK
+        // ======================================
+
+        if (order.getFarmer() == null ||
+                !order.getFarmer()
+                        .getId()
+                        .equals(farmerId)) {
+
+            throw new RuntimeException(
+                    "You do not have permission to update this order"
+            );
+
+        }
+
+
+        // ======================================
+        // CHECK CURRENT STATUS
+        // ======================================
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+
+            throw new RuntimeException(
+                    "Only pending orders can be accepted or rejected"
+            );
+
+        }
+
+
+        // ======================================
+        // UPDATE STATUS
+        // ======================================
+
+        order.setStatus(newStatus);
+
+
+        return orderRepository.save(order);
+
+    }
+    
+    
+
+}

@@ -2,13 +2,14 @@ package com.ifmap.controller;
 
 import com.ifmap.dto.CreateOrderRequest;
 import com.ifmap.entity.Order;
+import com.ifmap.entity.OrderStatus;
 import com.ifmap.service.OrderService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -18,6 +19,10 @@ public class OrderController {
 
     private final OrderService orderService;
 
+
+    // ==========================================
+    // CONSTRUCTOR
+    // ==========================================
 
     public OrderController(
             OrderService orderService
@@ -43,7 +48,6 @@ public class OrderController {
         Order order =
                 orderService.createOrder(request);
 
-
         return ResponseEntity.ok(order);
 
     }
@@ -65,7 +69,6 @@ public class OrderController {
                 orderService.getOrdersByBuyer(
                         buyerId
                 );
-
 
         return ResponseEntity.ok(orders);
 
@@ -89,9 +92,92 @@ public class OrderController {
                         farmerId
                 );
 
-
         return ResponseEntity.ok(orders);
 
     }
+
+
+    // ==========================================
+    // FARMER ACCEPT / REJECT ORDER
+    // ==========================================
+
+    @PutMapping(
+            "/{orderId}/farmer/{farmerId}/status"
+    )
+    public ResponseEntity<Order> updateOrderStatus(
+
+            @PathVariable
+            Long orderId,
+
+            @PathVariable
+            Long farmerId,
+
+            @RequestParam
+            OrderStatus status
+
+    ) {
+
+        Order updatedOrder =
+                orderService.updateOrderStatus(
+
+                        orderId,
+                        farmerId,
+                        status
+
+                );
+
+        return ResponseEntity.ok(
+                updatedOrder
+        );
+
+    }
+    
+ // ==========================================
+ // FARMER ACCEPT / REJECT ORDER
+ // ==========================================
+
+ @PutMapping("/{orderId}/status")
+ public ResponseEntity<Order> updateOrderStatus(
+
+         @PathVariable
+         Long orderId,
+
+         @RequestBody
+         Map<String, String> request
+
+ ) {
+
+     // Get logged-in farmer ID
+
+     Long farmerId =
+             Long.parseLong(
+                     request.get("farmerId")
+             );
+
+
+     // Get new status
+
+     OrderStatus newStatus =
+             OrderStatus.valueOf(
+                     request.get("status")
+                             .toUpperCase()
+             );
+
+
+     // Update order
+
+     Order updatedOrder =
+             orderService.updateOrderStatus(
+                     orderId,
+                     farmerId,
+                     newStatus
+             );
+
+
+     return ResponseEntity.ok(
+             updatedOrder
+     );
+
+ }
 
 }
