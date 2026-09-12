@@ -12,14 +12,18 @@ import java.time.LocalDate;
 public class Product {
 
 
+    // ==========================================
+    // ID
+    // ==========================================
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    // =========================
+    // ==========================================
     // PRODUCT DETAILS
-    // =========================
+    // ==========================================
 
     @Column(nullable = false)
     private String name;
@@ -29,13 +33,18 @@ public class Product {
     private String category;
 
 
+    // Available stock quantity
     private Double quantity;
+
 
     private String unit;
 
+
     private Double price;
 
+
     private LocalDate harvestDate;
+
 
     private String location;
 
@@ -43,17 +52,20 @@ public class Product {
     @Column(length = 1000)
     private String description;
 
+
+    // Available / Unavailable
     private String availability;
+
 
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
-    // =========================
+
+    // ==========================================
     // FARMER RELATIONSHIP
-    // =========================
+    // ==========================================
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "farmer_id", nullable = false)
 
     @JsonIgnoreProperties({
@@ -65,18 +77,18 @@ public class Product {
     private User farmer;
 
 
-    // =========================
+    // ==========================================
     // CONSTRUCTOR
-    // =========================
+    // ==========================================
 
     public Product() {
 
     }
 
 
-    // =========================
-    // GETTERS AND SETTERS
-    // =========================
+    // ==========================================
+    // ID
+    // ==========================================
 
     public Long getId() {
 
@@ -92,6 +104,10 @@ public class Product {
     }
 
 
+    // ==========================================
+    // NAME
+    // ==========================================
+
     public String getName() {
 
         return name;
@@ -105,6 +121,10 @@ public class Product {
 
     }
 
+
+    // ==========================================
+    // CATEGORY
+    // ==========================================
 
     public String getCategory() {
 
@@ -120,6 +140,10 @@ public class Product {
     }
 
 
+    // ==========================================
+    // QUANTITY
+    // ==========================================
+
     public Double getQuantity() {
 
         return quantity;
@@ -133,6 +157,10 @@ public class Product {
 
     }
 
+
+    // ==========================================
+    // UNIT
+    // ==========================================
 
     public String getUnit() {
 
@@ -148,6 +176,10 @@ public class Product {
     }
 
 
+    // ==========================================
+    // PRICE
+    // ==========================================
+
     public Double getPrice() {
 
         return price;
@@ -161,6 +193,10 @@ public class Product {
 
     }
 
+
+    // ==========================================
+    // HARVEST DATE
+    // ==========================================
 
     public LocalDate getHarvestDate() {
 
@@ -176,6 +212,10 @@ public class Product {
     }
 
 
+    // ==========================================
+    // LOCATION
+    // ==========================================
+
     public String getLocation() {
 
         return location;
@@ -189,6 +229,10 @@ public class Product {
 
     }
 
+
+    // ==========================================
+    // DESCRIPTION
+    // ==========================================
 
     public String getDescription() {
 
@@ -204,6 +248,10 @@ public class Product {
     }
 
 
+    // ==========================================
+    // AVAILABILITY
+    // ==========================================
+
     public String getAvailability() {
 
         return availability;
@@ -217,6 +265,10 @@ public class Product {
 
     }
 
+
+    // ==========================================
+    // IMAGE URL
+    // ==========================================
 
     public String getImageUrl() {
 
@@ -232,9 +284,9 @@ public class Product {
     }
 
 
-    // =========================
-    // FARMER GETTER / SETTER
-    // =========================
+    // ==========================================
+    // FARMER
+    // ==========================================
 
     public User getFarmer() {
 

@@ -9,24 +9,29 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository
-        extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    // ==========================================
     // GET ALL ORDERS OF A BUYER
+    // ==========================================
 
     List<Order> findByBuyerIdOrderByOrderDateDesc(
             Long buyerId
     );
 
 
+    // ==========================================
     // GET ALL ORDERS RECEIVED BY A FARMER
+    // ==========================================
 
     List<Order> findByFarmerIdOrderByOrderDateDesc(
             Long farmerId
     );
 
 
+    // ==========================================
     // GET FARMER ORDERS BY STATUS
+    // ==========================================
 
     List<Order> findByFarmerIdAndStatusOrderByOrderDateDesc(
             Long farmerId,
@@ -34,7 +39,9 @@ public interface OrderRepository
     );
 
 
+    // ==========================================
     // GET BUYER ORDERS BY STATUS
+    // ==========================================
 
     List<Order> findByBuyerIdAndStatusOrderByOrderDateDesc(
             Long buyerId,

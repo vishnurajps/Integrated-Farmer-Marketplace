@@ -1,6 +1,7 @@
 package com.ifmap.service;
 
 import com.ifmap.dto.CreateOrderRequest;
+
 import com.ifmap.entity.Order;
 import com.ifmap.entity.OrderStatus;
 import com.ifmap.entity.Product;
@@ -12,6 +13,7 @@ import com.ifmap.repository.ProductRepository;
 import com.ifmap.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +22,15 @@ import java.util.List;
 @Service
 public class OrderService {
 
+
+    // ==========================================
+    // REPOSITORIES
+    // ==========================================
+
     private final OrderRepository orderRepository;
+
     private final ProductRepository productRepository;
+
     private final UserRepository userRepository;
 
 
@@ -40,7 +49,9 @@ public class OrderService {
     ) {
 
         this.orderRepository = orderRepository;
+
         this.productRepository = productRepository;
+
         this.userRepository = userRepository;
 
     }
@@ -50,11 +61,28 @@ public class OrderService {
     // CREATE ORDER
     // ==========================================
 
+    @Transactional
     public Order createOrder(
             CreateOrderRequest request
     ) {
 
-        // Validate Product ID
+
+        // ======================================
+        // VALIDATE REQUEST
+        // ======================================
+
+        if (request == null) {
+
+            throw new RuntimeException(
+                    "Order request is required"
+            );
+
+        }
+
+
+        // ======================================
+        // VALIDATE PRODUCT ID
+        // ======================================
 
         if (request.getProductId() == null) {
 
@@ -65,7 +93,9 @@ public class OrderService {
         }
 
 
-        // Validate Buyer ID
+        // ======================================
+        // VALIDATE BUYER ID
+        // ======================================
 
         if (request.getBuyerId() == null) {
 
@@ -76,7 +106,9 @@ public class OrderService {
         }
 
 
-        // Validate Quantity
+        // ======================================
+        // VALIDATE QUANTITY
+        // ======================================
 
         if (request.getQuantity() == null ||
                 request.getQuantity() <= 0) {
@@ -101,7 +133,9 @@ public class OrderService {
                 );
 
 
-        // Verify Buyer Role
+        // ======================================
+        // VERIFY BUYER ROLE
+        // ======================================
 
         if (buyer.getRole() != UserRole.BUYER) {
 
@@ -141,7 +175,7 @@ public class OrderService {
 
 
         // ======================================
-        // CHECK STOCK
+        // CHECK PRODUCT QUANTITY
         // ======================================
 
         if (product.getQuantity() == null ||
@@ -154,9 +188,12 @@ public class OrderService {
         }
 
 
-        // Check requested quantity
+        // ======================================
+        // CHECK REQUESTED QUANTITY
+        // ======================================
 
-        if (request.getQuantity() > product.getQuantity()) {
+        if (request.getQuantity() >
+                product.getQuantity()) {
 
             throw new RuntimeException(
                     "Requested quantity is greater than available stock"
@@ -182,7 +219,20 @@ public class OrderService {
 
 
         // ======================================
-        // CHECK PRICE
+        // VERIFY FARMER ROLE
+        // ======================================
+
+        if (farmer.getRole() != UserRole.FARMER) {
+
+            throw new RuntimeException(
+                    "Invalid farmer assigned to product"
+            );
+
+        }
+
+
+        // ======================================
+        // VALIDATE PRODUCT PRICE
         // ======================================
 
         if (product.getPrice() == null ||
@@ -200,6 +250,7 @@ public class OrderService {
         // ======================================
 
         Double totalPrice =
+
                 product.getPrice()
                         * request.getQuantity();
 
@@ -210,8 +261,11 @@ public class OrderService {
 
         Order order = new Order();
 
+
         order.setProduct(product);
+
         order.setBuyer(buyer);
+
         order.setFarmer(farmer);
 
         order.setQuantity(
@@ -235,7 +289,9 @@ public class OrderService {
         );
 
 
-        // Save Order
+        // ======================================
+        // SAVE ORDER
+        // ======================================
 
         return orderRepository.save(order);
 
@@ -243,12 +299,40 @@ public class OrderService {
 
 
     // ==========================================
-    // GET ORDERS OF BUYER
+    // GET BUYER ORDERS
     // ==========================================
 
     public List<Order> getOrdersByBuyer(
             Long buyerId
     ) {
+
+
+        if (buyerId == null) {
+
+            throw new RuntimeException(
+                    "Buyer ID is required"
+            );
+
+        }
+
+
+        User buyer = userRepository
+                .findById(buyerId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Buyer not found"
+                        )
+                );
+
+
+        if (buyer.getRole() != UserRole.BUYER) {
+
+            throw new RuntimeException(
+                    "User is not a buyer"
+            );
+
+        }
+
 
         return orderRepository
                 .findByBuyerIdOrderByOrderDateDesc(
@@ -259,12 +343,40 @@ public class OrderService {
 
 
     // ==========================================
-    // GET ORDERS RECEIVED BY FARMER
+    // GET FARMER ORDERS
     // ==========================================
 
     public List<Order> getOrdersByFarmer(
             Long farmerId
     ) {
+
+
+        if (farmerId == null) {
+
+            throw new RuntimeException(
+                    "Farmer ID is required"
+            );
+
+        }
+
+
+        User farmer = userRepository
+                .findById(farmerId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Farmer not found"
+                        )
+                );
+
+
+        if (farmer.getRole() != UserRole.FARMER) {
+
+            throw new RuntimeException(
+                    "User is not a farmer"
+            );
+
+        }
+
 
         return orderRepository
                 .findByFarmerIdOrderByOrderDateDesc(
@@ -275,9 +387,10 @@ public class OrderService {
 
 
     // ==========================================
-    // FARMER ACCEPT / REJECT ORDER
+    // ACCEPT OR REJECT ORDER
     // ==========================================
 
+    @Transactional
     public Order updateOrderStatus(
 
             Long orderId,
@@ -287,6 +400,33 @@ public class OrderService {
             OrderStatus newStatus
 
     ) {
+
+
+        // ======================================
+        // VALIDATE ORDER ID
+        // ======================================
+
+        if (orderId == null) {
+
+            throw new RuntimeException(
+                    "Order ID is required"
+            );
+
+        }
+
+
+        // ======================================
+        // VALIDATE FARMER ID
+        // ======================================
+
+        if (farmerId == null) {
+
+            throw new RuntimeException(
+                    "Farmer ID is required"
+            );
+
+        }
+
 
         // ======================================
         // VALIDATE STATUS
@@ -301,7 +441,9 @@ public class OrderService {
         }
 
 
-        // For now, farmer can only accept/reject
+        // ======================================
+        // ALLOW ONLY ACCEPT / REJECT
+        // ======================================
 
         if (newStatus != OrderStatus.ACCEPTED &&
                 newStatus != OrderStatus.REJECTED) {
@@ -326,7 +468,9 @@ public class OrderService {
                 );
 
 
-        // Verify farmer role
+        // ======================================
+        // VERIFY FARMER ROLE
+        // ======================================
 
         if (farmer.getRole() != UserRole.FARMER) {
 
@@ -351,10 +495,11 @@ public class OrderService {
 
 
         // ======================================
-        // SECURITY CHECK
+        // VERIFY ORDER BELONGS TO FARMER
         // ======================================
 
         if (order.getFarmer() == null ||
+                order.getFarmer().getId() == null ||
                 !order.getFarmer()
                         .getId()
                         .equals(farmerId)) {
@@ -367,7 +512,7 @@ public class OrderService {
 
 
         // ======================================
-        // CHECK CURRENT STATUS
+        // ONLY PENDING ORDERS CAN CHANGE
         // ======================================
 
         if (order.getStatus() != OrderStatus.PENDING) {
@@ -380,16 +525,168 @@ public class OrderService {
 
 
         // ======================================
-        // UPDATE STATUS
+        // ACCEPT ORDER
+        // ======================================
+
+        if (newStatus == OrderStatus.ACCEPTED) {
+
+
+            // ==================================
+            // GET PRODUCT
+            // ==================================
+
+            if (order.getProduct() == null ||
+                    order.getProduct().getId() == null) {
+
+                throw new RuntimeException(
+                        "Product information is missing"
+                );
+
+            }
+
+
+            // ==================================
+            // LOAD CURRENT PRODUCT
+            // ==================================
+
+            Product product = productRepository
+                    .findById(
+                            order.getProduct().getId()
+                    )
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Product not found"
+                            )
+                    );
+
+
+            // ==================================
+            // VALIDATE ORDER QUANTITY
+            // ==================================
+
+            if (order.getQuantity() == null ||
+                    order.getQuantity() <= 0) {
+
+                throw new RuntimeException(
+                        "Invalid order quantity"
+                );
+
+            }
+
+
+            // ==================================
+            // CHECK AVAILABLE STOCK
+            // ==================================
+
+            if (product.getQuantity() == null ||
+                    product.getQuantity() <= 0) {
+
+                throw new RuntimeException(
+                        "Product is out of stock"
+                );
+
+            }
+
+
+            // ==================================
+            // CHECK STOCK
+            // ==================================
+
+            if (product.getQuantity() <
+                    order.getQuantity()) {
+
+                throw new RuntimeException(
+
+                        "Insufficient stock. Available: "
+
+                                + product.getQuantity()
+
+                                + " "
+
+                                + product.getUnit()
+
+                                + ", Required: "
+
+                                + order.getQuantity()
+
+                                + " "
+
+                                + product.getUnit()
+
+                );
+
+            }
+
+
+            // ==================================
+            // CALCULATE REMAINING QUANTITY
+            // ==================================
+
+            Double remainingQuantity =
+
+                    product.getQuantity()
+                            - order.getQuantity();
+
+
+            // ==================================
+            // UPDATE PRODUCT QUANTITY
+            // ==================================
+
+            product.setQuantity(
+                    remainingQuantity
+            );
+
+
+            // ==================================
+            // UPDATE AVAILABILITY
+            // ==================================
+
+            if (remainingQuantity <= 0) {
+
+                product.setQuantity(0.0);
+
+                product.setAvailability(
+                        "Unavailable"
+                );
+
+            } else {
+
+                product.setAvailability(
+                        "Available"
+                );
+
+            }
+
+
+            // ==================================
+            // SAVE PRODUCT
+            // ==================================
+
+            productRepository.save(product);
+
+        }
+
+
+        // ======================================
+        // REJECT ORDER
+        // ======================================
+
+        // If rejected, product quantity is NOT changed.
+
+
+        // ======================================
+        // UPDATE ORDER STATUS
         // ======================================
 
         order.setStatus(newStatus);
 
 
+        // ======================================
+        // SAVE ORDER
+        // ======================================
+
         return orderRepository.save(order);
 
     }
-    
-    
 
 }

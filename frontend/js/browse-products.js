@@ -1,4 +1,11 @@
 // ==========================================
+// BROWSE PRODUCTS.JS
+// ==========================================
+
+console.log("BROWSE PRODUCTS.JS LOADED");
+
+
+// ==========================================
 // API URL
 // ==========================================
 
@@ -26,21 +33,24 @@ const userRole =
 
 
 // ==========================================
+// PRODUCT DATA
+// ==========================================
+
+let allProducts = [];
+
+
+// ==========================================
 // CHECK LOGIN
 // ==========================================
 
 if (!userId || userRole !== "BUYER") {
 
-    window.location.href = "login.html";
+    alert("Please login as a buyer.");
+
+    window.location.href =
+        "login.html";
 
 }
-
-
-// ==========================================
-// PRODUCT DATA
-// ==========================================
-
-let allProducts = [];
 
 
 // ==========================================
@@ -51,19 +61,86 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
+        console.log("Buyer ID:", userId);
+        console.log("User Role:", userRole);
+
+
+        // ==================================
+        // DISPLAY USER NAME
+        // ==================================
+
         displayUserName();
+
+
+        // ==================================
+        // LOAD PRODUCTS
+        // ==================================
 
         loadProducts();
 
+
+        // ==================================
+        // SETUP SEARCH
+        // ==================================
+
         setupSearch();
+
+
+        // ==================================
+        // SETUP CATEGORY FILTER
+        // ==================================
 
         setupCategoryFilter();
 
+
+        // ==================================
+        // SETUP CLEAR FILTERS
+        // ==================================
+
         setupClearFilters();
+
+
+        // ==================================
+        // SETUP LOGOUT
+        // ==================================
 
         setupLogout();
 
+
+        // ==================================
+        // SETUP SIDEBAR LOGOUT
+        // ==================================
+
+        setupSidebarLogout();
+
+
+        // ==================================
+        // UPDATE CART BADGE
+        // ==================================
+
         updateCartBadge();
+
+
+        // ==================================
+        // AUTO REFRESH PRODUCTS
+        // ==================================
+
+        // Refresh every 10 seconds so that
+        // quantity changes after farmer accepts
+        // an order are reflected automatically.
+
+        setInterval(
+            function () {
+
+                console.log(
+                    "Refreshing marketplace products..."
+                );
+
+                refreshProducts();
+
+            },
+            10000
+        );
 
     }
 );
@@ -101,32 +178,100 @@ async function loadProducts() {
         );
 
 
+    if (!container) {
+
+        console.error(
+            "productContainer not found"
+        );
+
+        return;
+
+    }
+
+
+    // ======================================
+    // SHOW LOADING
+    // ======================================
+
+    container.innerHTML = `
+
+        <div class="col-12 text-center py-5">
+
+            <div
+                class="spinner-border text-success"
+                role="status"
+            ></div>
+
+            <p class="text-muted mt-3">
+
+                Loading products...
+
+            </p>
+
+        </div>
+
+    `;
+
+
     try {
 
         const response =
-            await fetch(PRODUCT_API_URL);
+            await fetch(
+                PRODUCT_API_URL,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        console.log(
+            "Product API Response:",
+            response.status
+        );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Failed to load products"
+                "Failed to load products. Status: " +
+                response.status
             );
 
         }
 
 
-        allProducts =
+        const products =
             await response.json();
 
 
         console.log(
             "Marketplace Products:",
-            allProducts
+            products
         );
 
 
-        displayProducts(allProducts);
+        // ======================================
+        // SAVE PRODUCTS
+        // ======================================
+
+        allProducts =
+            Array.isArray(products)
+                ? products
+                : [];
+
+
+        // ======================================
+        // UPDATE CART QUANTITY DATA
+        // ======================================
+
+        updateCartProductAvailability();
+
+
+        // ======================================
+        // DISPLAY PRODUCTS
+        // ======================================
+
+        applyFilters();
 
     }
 
@@ -144,15 +289,89 @@ async function loadProducts() {
 
                 <div class="alert alert-danger">
 
-                    Unable to load products.
+                    <strong>
+                        Unable to load products.
+                    </strong>
 
-                    Make sure Spring Boot is running.
+                    <br>
+
+                    <small>
+                        ${error.message}
+                    </small>
 
                 </div>
 
             </div>
 
         `;
+
+    }
+
+}
+
+
+// ==========================================
+// REFRESH PRODUCTS
+// ==========================================
+
+async function refreshProducts() {
+
+    try {
+
+        const response =
+            await fetch(
+                PRODUCT_API_URL,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to refresh products"
+            );
+
+        }
+
+
+        const products =
+            await response.json();
+
+
+        allProducts =
+            Array.isArray(products)
+                ? products
+                : [];
+
+
+        // ======================================
+        // UPDATE CART STOCK INFORMATION
+        // ======================================
+
+        updateCartProductAvailability();
+
+
+        // ======================================
+        // APPLY CURRENT FILTERS
+        // ======================================
+
+        applyFilters();
+
+
+        console.log(
+            "Products refreshed successfully"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Product refresh error:",
+            error
+        );
 
     }
 
@@ -177,8 +396,23 @@ function displayProducts(products) {
         );
 
 
+    if (!container) {
+
+        return;
+
+    }
+
+
+    // ======================================
+    // CLEAR CONTAINER
+    // ======================================
+
     container.innerHTML = "";
 
+
+    // ======================================
+    // UPDATE RESULT COUNT
+    // ======================================
 
     if (resultCount) {
 
@@ -200,7 +434,7 @@ function displayProducts(products) {
 
                 <div class="alert alert-info">
 
-                    No products found.
+                    No products available.
 
                 </div>
 
@@ -214,11 +448,15 @@ function displayProducts(products) {
 
 
     // ======================================
-    // PRODUCT CARDS
+    // DISPLAY PRODUCTS
     // ======================================
 
     products.forEach(
         function (product) {
+
+            // ==================================
+            // IMAGE
+            // ==================================
 
             let imageUrl =
                 product.imageUrl;
@@ -235,6 +473,10 @@ function displayProducts(products) {
             }
 
 
+            // ==================================
+            // FARMER NAME
+            // ==================================
+
             const farmerName =
                 product.farmer &&
                 product.farmer.fullName
@@ -242,20 +484,87 @@ function displayProducts(products) {
                     : "Farmer";
 
 
+            // ==================================
+            // QUANTITY
+            // ==================================
+
+            const quantity =
+                Number(
+                    product.quantity ?? 0
+                );
+
+
+            const unit =
+                product.unit || "";
+
+
+            // ==================================
+            // PRODUCT AVAILABLE
+            // ==================================
+
+            const isAvailable =
+                quantity > 0 &&
+                product.availability &&
+                product.availability
+                    .toLowerCase() === "available";
+
+
+            // ==================================
+            // BUTTON
+            // ==================================
+
+            const addButton = isAvailable
+
+                ? `
+
+                    <button
+                        class="btn btn-success w-50"
+                        onclick="addToCart(${product.id})"
+                    >
+
+                        <i class="bi bi-cart-plus"></i>
+
+                        Add
+
+                    </button>
+
+                `
+
+                : `
+
+                    <button
+                        class="btn btn-secondary w-50"
+                        disabled
+                    >
+
+                        Out of Stock
+
+                    </button>
+
+                `;
+
+
+            // ==================================
+            // PRODUCT CARD
+            // ==================================
+
             const card = `
 
                 <div class="col-lg-4 col-md-6 mb-4">
 
                     <div
-                        class="card h-100 shadow-sm">
+                        class="card h-100 shadow-sm"
+                    >
 
 
                         <!-- PRODUCT IMAGE -->
 
                         <img
                             src="${imageUrl}"
+
                             class="card-img-top"
-                            alt="${product.name}"
+
+                            alt="${product.name || "Product"}"
 
                             style="
                                 height: 220px;
@@ -268,7 +577,9 @@ function displayProducts(products) {
                         >
 
 
-                        <div class="card-body d-flex flex-column">
+                        <div
+                            class="card-body d-flex flex-column"
+                        >
 
 
                             <!-- PRODUCT NAME -->
@@ -308,7 +619,7 @@ function displayProducts(products) {
                             </p>
 
 
-                            <!-- QUANTITY -->
+                            <!-- AVAILABLE QUANTITY -->
 
                             <p class="mb-2">
 
@@ -316,9 +627,11 @@ function displayProducts(products) {
 
                                 Available:
 
-                                ${product.quantity ?? "-"}
+                                <strong>
 
-                                ${product.unit || ""}
+                                    ${quantity} ${unit}
+
+                                </strong>
 
                             </p>
 
@@ -329,7 +642,8 @@ function displayProducts(products) {
 
                                 <i class="bi bi-geo-alt"></i>
 
-                                ${product.location || "Location not specified"}
+                                ${product.location ||
+                                    "Location not specified"}
 
                             </p>
 
@@ -342,36 +656,65 @@ function displayProducts(products) {
 
                                 <small class="text-muted">
 
-                                    /${product.unit || "unit"}
+                                    /${unit || "unit"}
 
                                 </small>
 
                             </h4>
 
 
+                            <!-- AVAILABILITY -->
+
+                            <p class="mb-2">
+
+                                ${isAvailable
+
+                                    ? `
+
+                                        <span
+                                            class="badge bg-success"
+                                        >
+
+                                            Available
+
+                                        </span>
+
+                                    `
+
+                                    : `
+
+                                        <span
+                                            class="badge bg-danger"
+                                        >
+
+                                            Out of Stock
+
+                                        </span>
+
+                                    `
+                                }
+
+                            </p>
+
+
                             <!-- BUTTONS -->
 
-                            <div class="d-flex gap-2 mt-3">
+                            <div
+                                class="d-flex gap-2 mt-3"
+                            >
 
 
                                 <button
                                     class="btn btn-outline-success w-50"
-                                    onclick="viewProduct(${product.id})">
+                                    onclick="viewProduct(${product.id})"
+                                >
 
                                     View
 
                                 </button>
 
 
-                                <button
-                                    class="btn btn-success w-50"
-                                    onclick="addToCart(${product.id})">
-
-                                    <i class="bi bi-cart-plus"></i>
-
-                                    Add
-
-                                </button>
+                                ${addButton}
 
 
                             </div>
@@ -396,7 +739,7 @@ function displayProducts(products) {
 
 
 // ==========================================
-// SEARCH
+// SEARCH SETUP
 // ==========================================
 
 function setupSearch() {
@@ -405,6 +748,13 @@ function setupSearch() {
         document.getElementById(
             "searchProduct"
         );
+
+
+    if (!searchInput) {
+
+        return;
+
+    }
 
 
     searchInput.addEventListener(
@@ -416,7 +766,7 @@ function setupSearch() {
 
 
 // ==========================================
-// CATEGORY FILTER
+// CATEGORY FILTER SETUP
 // ==========================================
 
 function setupCategoryFilter() {
@@ -425,6 +775,13 @@ function setupCategoryFilter() {
         document.getElementById(
             "categoryFilter"
         );
+
+
+    if (!categoryFilter) {
+
+        return;
+
+    }
 
 
     categoryFilter.addEventListener(
@@ -441,20 +798,30 @@ function setupCategoryFilter() {
 
 function applyFilters() {
 
-    const searchText =
+    const searchInput =
         document.getElementById(
             "searchProduct"
-        )
-        .value
-        .toLowerCase()
-        .trim();
+        );
+
+
+    const categoryFilter =
+        document.getElementById(
+            "categoryFilter"
+        );
+
+
+    const searchText =
+        searchInput
+            ? searchInput.value
+                .toLowerCase()
+                .trim()
+            : "";
 
 
     const selectedCategory =
-        document.getElementById(
-            "categoryFilter"
-        )
-        .value;
+        categoryFilter
+            ? categoryFilter.value
+            : "All";
 
 
     const filteredProducts =
@@ -477,20 +844,26 @@ function applyFilters() {
 
 
                 const matchesCategory =
+
                     selectedCategory === "All" ||
+
                     category === selectedCategory;
 
 
                 return (
+
                     matchesSearch &&
                     matchesCategory
+
                 );
 
             }
         );
 
 
-    displayProducts(filteredProducts);
+    displayProducts(
+        filteredProducts
+    );
 
 }
 
@@ -507,21 +880,44 @@ function setupClearFilters() {
         );
 
 
+    if (!clearButton) {
+
+        return;
+
+    }
+
+
     clearButton.addEventListener(
         "click",
         function () {
 
-            document.getElementById(
-                "searchProduct"
-            ).value = "";
+            const searchInput =
+                document.getElementById(
+                    "searchProduct"
+                );
 
 
-            document.getElementById(
-                "categoryFilter"
-            ).value = "All";
+            const categoryFilter =
+                document.getElementById(
+                    "categoryFilter"
+                );
 
 
-            displayProducts(allProducts);
+            if (searchInput) {
+
+                searchInput.value = "";
+
+            }
+
+
+            if (categoryFilter) {
+
+                categoryFilter.value = "All";
+
+            }
+
+
+            applyFilters();
 
         }
     );
@@ -535,6 +931,10 @@ function setupClearFilters() {
 
 function addToCart(productId) {
 
+    // ======================================
+    // FIND LATEST PRODUCT
+    // ======================================
+
     const product =
         allProducts.find(
             product =>
@@ -544,7 +944,26 @@ function addToCart(productId) {
 
     if (!product) {
 
-        alert("Product not found");
+        alert("Product not found.");
+
+        return;
+
+    }
+
+
+    // ======================================
+    // CHECK CURRENT STOCK
+    // ======================================
+
+    const availableQuantity =
+        Number(product.quantity ?? 0);
+
+
+    if (availableQuantity <= 0) {
+
+        alert(
+            "This product is out of stock."
+        );
 
         return;
 
@@ -562,7 +981,7 @@ function addToCart(productId) {
 
 
     // ======================================
-    // CHECK EXISTING PRODUCT
+    // FIND EXISTING PRODUCT
     // ======================================
 
     const existingProduct =
@@ -572,13 +991,58 @@ function addToCart(productId) {
         );
 
 
+    // ======================================
+    // PRODUCT ALREADY IN CART
+    // ======================================
+
     if (existingProduct) {
 
-        existingProduct.cartQuantity += 1;
+        const currentCartQuantity =
+            Number(
+                existingProduct.cartQuantity ?? 0
+            );
+
+
+        // ==================================
+        // CHECK LATEST STOCK
+        // ==================================
+
+        if (
+            currentCartQuantity + 1 >
+            availableQuantity
+        ) {
+
+            alert(
+                "Cannot add more than available stock.\n\n" +
+                "Available: " +
+                availableQuantity +
+                " " +
+                (product.unit || "")
+            );
+
+            return;
+
+        }
+
+
+        existingProduct.cartQuantity =
+            currentCartQuantity + 1;
+
+
+        // ==================================
+        // UPDATE LATEST STOCK
+        // ==================================
+
+        existingProduct.availableQuantity =
+            availableQuantity;
 
     }
 
     else {
+
+        // ==================================
+        // ADD NEW PRODUCT
+        // ==================================
 
         cart.push({
 
@@ -595,7 +1059,7 @@ function addToCart(productId) {
             imageUrl: product.imageUrl,
 
             availableQuantity:
-                product.quantity,
+                availableQuantity,
 
             cartQuantity: 1
 
@@ -614,6 +1078,10 @@ function addToCart(productId) {
     );
 
 
+    // ======================================
+    // UPDATE BADGE
+    // ======================================
+
     updateCartBadge();
 
 
@@ -621,6 +1089,124 @@ function addToCart(productId) {
         product.name +
         " added to cart!"
     );
+
+}
+
+
+// ==========================================
+// UPDATE CART PRODUCT AVAILABILITY
+// ==========================================
+
+function updateCartProductAvailability() {
+
+    let cart =
+        JSON.parse(
+            localStorage.getItem("cart")
+        ) || [];
+
+
+    let cartChanged = false;
+
+
+    // ======================================
+    // UPDATE CART USING LATEST PRODUCT STOCK
+    // ======================================
+
+    cart.forEach(
+        function (cartItem) {
+
+            const latestProduct =
+                allProducts.find(
+                    product =>
+                        product.id === cartItem.id
+                );
+
+
+            if (latestProduct) {
+
+                const latestQuantity =
+                    Number(
+                        latestProduct.quantity ?? 0
+                    );
+
+
+                // Update available quantity
+
+                if (
+                    cartItem.availableQuantity !==
+                    latestQuantity
+                ) {
+
+                    cartItem.availableQuantity =
+                        latestQuantity;
+
+                    cartChanged = true;
+
+                }
+
+
+                // ==================================
+                // IF CART QUANTITY IS GREATER
+                // THAN AVAILABLE STOCK
+                // ==================================
+
+                if (
+                    cartItem.cartQuantity >
+                    latestQuantity
+                ) {
+
+                    cartItem.cartQuantity =
+                        Math.max(
+                            0,
+                            latestQuantity
+                        );
+
+                    cartChanged = true;
+
+                }
+
+            }
+
+            else {
+
+                // Product is no longer available
+
+                cartItem.availableQuantity = 0;
+
+                cartChanged = true;
+
+            }
+
+        }
+    );
+
+
+    // ======================================
+    // REMOVE ZERO QUANTITY ITEMS
+    // ======================================
+
+    cart =
+        cart.filter(
+            item =>
+                item.cartQuantity > 0
+        );
+
+
+    // ======================================
+    // SAVE UPDATED CART
+    // ======================================
+
+    if (cartChanged) {
+
+        localStorage.setItem(
+            "cart",
+            JSON.stringify(cart)
+        );
+
+    }
+
+
+    updateCartBadge();
 
 }
 
@@ -657,7 +1243,9 @@ function updateCartBadge() {
         function (item) {
 
             totalItems +=
-                item.cartQuantity || 1;
+                Number(
+                    item.cartQuantity ?? 0
+                );
 
         }
     );
@@ -682,7 +1270,7 @@ function viewProduct(productId) {
 
 
 // ==========================================
-// LOGOUT
+// NAVBAR LOGOUT
 // ==========================================
 
 function setupLogout() {
@@ -706,34 +1294,89 @@ function setupLogout() {
 
             event.preventDefault();
 
-
-            const confirmLogout =
-                confirm(
-                    "Are you sure you want to logout?"
-                );
-
-
-            if (!confirmLogout) {
-
-                return;
-
-            }
-
-
-            sessionStorage.clear();
-
-
-            localStorage.removeItem("userId");
-
-            localStorage.removeItem("fullName");
-
-            localStorage.removeItem("userRole");
-
-
-            window.location.href =
-                "login.html";
+            logout();
 
         }
     );
+
+}
+
+
+// ==========================================
+// SIDEBAR LOGOUT
+// ==========================================
+
+function setupSidebarLogout() {
+
+    const sidebarLogout =
+        document.getElementById(
+            "sidebarLogoutButton"
+        );
+
+
+    if (!sidebarLogout) {
+
+        return;
+
+    }
+
+
+    sidebarLogout.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            logout();
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+function logout() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    // ======================================
+    // CLEAR SESSION
+    // ======================================
+
+    sessionStorage.clear();
+
+
+    // ======================================
+    // CLEAR LOGIN DATA
+    // ======================================
+
+    localStorage.removeItem("userId");
+
+    localStorage.removeItem("fullName");
+
+    localStorage.removeItem("userRole");
+
+
+    // ======================================
+    // REDIRECT
+    // ======================================
+
+    window.location.href =
+        "login.html";
 
 }

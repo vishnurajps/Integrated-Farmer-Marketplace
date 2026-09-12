@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Order {
 
     // ==========================================
-    // ORDER ID
+    // ID
     // ==========================================
 
     @Id
@@ -21,11 +21,8 @@ public class Order {
     // PRODUCT
     // ==========================================
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "product_id",
-            nullable = false
-    )
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
 
@@ -33,11 +30,8 @@ public class Order {
     // BUYER
     // ==========================================
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "buyer_id",
-            nullable = false
-    )
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
 
@@ -45,27 +39,22 @@ public class Order {
     // FARMER
     // ==========================================
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "farmer_id",
-            nullable = false
-    )
+    @ManyToOne
+    @JoinColumn(name = "farmer_id", nullable = false)
     private User farmer;
 
 
     // ==========================================
-    // ORDER QUANTITY
+    // QUANTITY
     // ==========================================
 
-    @Column(nullable = false)
     private Double quantity;
 
 
     // ==========================================
-    // PRODUCT PRICE AT ORDER TIME
+    // PRICE PER UNIT
     // ==========================================
 
-    @Column(nullable = false)
     private Double pricePerUnit;
 
 
@@ -73,7 +62,6 @@ public class Order {
     // TOTAL PRICE
     // ==========================================
 
-    @Column(nullable = false)
     private Double totalPrice;
 
 
@@ -82,7 +70,6 @@ public class Order {
     // ==========================================
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private OrderStatus status;
 
 
@@ -90,17 +77,7 @@ public class Order {
     // ORDER DATE
     // ==========================================
 
-    @Column(nullable = false)
     private LocalDateTime orderDate;
-
-
-    // ==========================================
-    // CONSTRUCTOR
-    // ==========================================
-
-    public Order() {
-
-    }
 
 
     // ==========================================
@@ -108,121 +85,82 @@ public class Order {
     // ==========================================
 
     public Long getId() {
-
         return id;
-
     }
 
     public void setId(Long id) {
-
         this.id = id;
-
     }
 
 
     public Product getProduct() {
-
         return product;
-
     }
 
     public void setProduct(Product product) {
-
         this.product = product;
-
     }
 
 
     public User getBuyer() {
-
         return buyer;
-
     }
 
     public void setBuyer(User buyer) {
-
         this.buyer = buyer;
-
     }
 
 
     public User getFarmer() {
-
         return farmer;
-
     }
 
     public void setFarmer(User farmer) {
-
         this.farmer = farmer;
-
     }
 
 
     public Double getQuantity() {
-
         return quantity;
-
     }
 
     public void setQuantity(Double quantity) {
-
         this.quantity = quantity;
-
     }
 
 
     public Double getPricePerUnit() {
-
         return pricePerUnit;
-
     }
 
     public void setPricePerUnit(Double pricePerUnit) {
-
         this.pricePerUnit = pricePerUnit;
-
     }
 
 
     public Double getTotalPrice() {
-
         return totalPrice;
-
     }
 
     public void setTotalPrice(Double totalPrice) {
-
         this.totalPrice = totalPrice;
-
     }
 
 
     public OrderStatus getStatus() {
-
         return status;
-
     }
 
     public void setStatus(OrderStatus status) {
-
         this.status = status;
-
     }
 
 
     public LocalDateTime getOrderDate() {
-
         return orderDate;
-
     }
 
-    public void setOrderDate(
-            LocalDateTime orderDate
-    ) {
-
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
-
     }
-
 }

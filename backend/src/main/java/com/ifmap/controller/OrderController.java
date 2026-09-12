@@ -1,21 +1,28 @@
 package com.ifmap.controller;
 
 import com.ifmap.dto.CreateOrderRequest;
+import com.ifmap.dto.UpdateOrderStatusRequest;
+
 import com.ifmap.entity.Order;
 import com.ifmap.entity.OrderStatus;
+
 import com.ifmap.service.OrderService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 public class OrderController {
 
+
+    // ==========================================
+    // SERVICE
+    // ==========================================
 
     private final OrderService orderService;
 
@@ -38,17 +45,27 @@ public class OrderController {
     // ==========================================
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(
+    public ResponseEntity<?> createOrder(
 
             @RequestBody
             CreateOrderRequest request
 
     ) {
 
-        Order order =
-                orderService.createOrder(request);
+        try {
 
-        return ResponseEntity.ok(order);
+            Order order =
+                    orderService.createOrder(request);
+
+            return ResponseEntity.ok(order);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
 
@@ -58,19 +75,29 @@ public class OrderController {
     // ==========================================
 
     @GetMapping("/buyer/{buyerId}")
-    public ResponseEntity<List<Order>> getOrdersByBuyer(
+    public ResponseEntity<?> getOrdersByBuyer(
 
             @PathVariable
             Long buyerId
 
     ) {
 
-        List<Order> orders =
-                orderService.getOrdersByBuyer(
-                        buyerId
-                );
+        try {
 
-        return ResponseEntity.ok(orders);
+            List<Order> orders =
+                    orderService.getOrdersByBuyer(
+                            buyerId
+                    );
+
+            return ResponseEntity.ok(orders);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
 
@@ -80,19 +107,29 @@ public class OrderController {
     // ==========================================
 
     @GetMapping("/farmer/{farmerId}")
-    public ResponseEntity<List<Order>> getOrdersByFarmer(
+    public ResponseEntity<?> getOrdersByFarmer(
 
             @PathVariable
             Long farmerId
 
     ) {
 
-        List<Order> orders =
-                orderService.getOrdersByFarmer(
-                        farmerId
-                );
+        try {
 
-        return ResponseEntity.ok(orders);
+            List<Order> orders =
+                    orderService.getOrdersByFarmer(
+                            farmerId
+                    );
+
+            return ResponseEntity.ok(orders);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
 
@@ -101,83 +138,107 @@ public class OrderController {
     // FARMER ACCEPT / REJECT ORDER
     // ==========================================
 
-    @PutMapping(
-            "/{orderId}/farmer/{farmerId}/status"
-    )
-    public ResponseEntity<Order> updateOrderStatus(
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatus(
 
             @PathVariable
             Long orderId,
 
-            @PathVariable
-            Long farmerId,
-
-            @RequestParam
-            OrderStatus status
+            @RequestBody
+            UpdateOrderStatusRequest request
 
     ) {
 
-        Order updatedOrder =
-                orderService.updateOrderStatus(
+        try {
 
-                        orderId,
-                        farmerId,
-                        status
+            // ==================================
+            // VALIDATE REQUEST
+            // ==================================
 
-                );
+            if (request == null) {
 
-        return ResponseEntity.ok(
-                updatedOrder
-        );
+                return ResponseEntity
+                        .badRequest()
+                        .body(
+                                "Request body is required"
+                        );
+
+            }
+
+
+            // ==================================
+            // VALIDATE FARMER ID
+            // ==================================
+
+            if (request.getFarmerId() == null) {
+
+                return ResponseEntity
+                        .badRequest()
+                        .body(
+                                "Farmer ID is required"
+                        );
+
+            }
+
+
+            // ==================================
+            // VALIDATE STATUS
+            // ==================================
+
+            if (request.getStatus() == null) {
+
+                return ResponseEntity
+                        .badRequest()
+                        .body(
+                                "Order status is required"
+                        );
+
+            }
+
+
+            // ==================================
+            // ALLOW ONLY ACCEPT / REJECT
+            // ==================================
+
+            if (request.getStatus() != OrderStatus.ACCEPTED &&
+                    request.getStatus() != OrderStatus.REJECTED) {
+
+                return ResponseEntity
+                        .badRequest()
+                        .body(
+                                "Status must be ACCEPTED or REJECTED"
+                        );
+
+            }
+
+
+            // ==================================
+            // UPDATE ORDER
+            // ==================================
+
+            Order updatedOrder =
+                    orderService.updateOrderStatus(
+
+                            orderId,
+
+                            request.getFarmerId(),
+
+                            request.getStatus()
+
+                    );
+
+
+            return ResponseEntity.ok(updatedOrder);
+
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+
+        }
 
     }
-    
- // ==========================================
- // FARMER ACCEPT / REJECT ORDER
- // ==========================================
-
- @PutMapping("/{orderId}/status")
- public ResponseEntity<Order> updateOrderStatus(
-
-         @PathVariable
-         Long orderId,
-
-         @RequestBody
-         Map<String, String> request
-
- ) {
-
-     // Get logged-in farmer ID
-
-     Long farmerId =
-             Long.parseLong(
-                     request.get("farmerId")
-             );
-
-
-     // Get new status
-
-     OrderStatus newStatus =
-             OrderStatus.valueOf(
-                     request.get("status")
-                             .toUpperCase()
-             );
-
-
-     // Update order
-
-     Order updatedOrder =
-             orderService.updateOrderStatus(
-                     orderId,
-                     farmerId,
-                     newStatus
-             );
-
-
-     return ResponseEntity.ok(
-             updatedOrder
-     );
-
- }
 
 }
